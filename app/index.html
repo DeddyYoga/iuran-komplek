@@ -1,0 +1,1710 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#014a94">
+<title>Iuran Komplek — PNM Residence 2</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<style type="text/tailwindcss">
+@theme {
+  --font-sans: Outfit, ui-sans-serif, system-ui, sans-serif;
+  --color-brand-25: #f0f6fd;
+  --color-brand-50: #e3effb;
+  --color-brand-100: #c9def6;
+  --color-brand-200: #98bdec;
+  --color-brand-300: #679be2;
+  --color-brand-400: #3678d3;
+  --color-brand-500: #014a94;
+  --color-brand-600: #014084;
+  --color-brand-700: #01366d;
+  --color-brand-800: #012b56;
+  --color-brand-900: #053356;
+  --color-success-400: #9dd47f;
+  --color-success-500: #82c467;
+  --color-success-600: #4c860b;
+  --color-success-50: #f0f9ec;
+  --color-error-50: #fef2f2;
+  --color-error-100: #fee2e2;
+  --color-error-200: #fecaca;
+  --color-error-400: #f87171;
+  --color-error-500: #dc2626;
+  --color-error-600: #b91c1c;
+}
+</style>
+<style>
+[x-cloak]{display:none!important}
+.no-scrollbar::-webkit-scrollbar{display:none}
+.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
+.line-clamp-1{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+</style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800 antialiased">
+<div id="app" class="min-h-screen">
+
+  <!-- ===== SIDEBAR (pola TailAdmin: fixed, w-72, backdrop mobile) ===== -->
+  <div v-if="menuOpen" class="fixed inset-0 z-99 bg-gray-900/50 backdrop-blur-xs xl:hidden" @click="menuOpen=false" x-transition></div>
+  <aside class="fixed top-0 left-0 z-9999 flex h-screen w-72 flex-col border-r border-gray-200 bg-white px-5 transition-all duration-300"
+    :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full pointer-events-none'">
+    <!-- header sidebar -->
+    <div class="flex items-center gap-2.5 pt-5 pb-7">
+      <span class="flex size-10 items-center justify-center rounded-xl bg-brand-500 text-base font-bold text-white">IK</span>
+      <div class="leading-tight">
+        <div class="text-base font-bold text-brand-500">Iuran Komplek</div>
+        <div class="text-xs text-gray-400">PNM Residence 2</div>
+      </div>
+      <button class="ml-auto text-gray-400 hover:text-gray-700 xl:hidden" @click="menuOpen=false">
+        <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <nav class="no-scrollbar flex flex-1 flex-col overflow-y-auto pb-4">
+      <!-- WARGA -->
+      <template v-if="!user">
+        <h3 class="mb-3 px-3 text-xs font-medium uppercase leading-5 tracking-wide text-gray-400">Menu Warga</h3>
+        <ul class="mb-6 flex flex-col gap-1">
+          <li><a href="#/" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors" :class="path==='/' ? 'bg-brand-50 text-brand-500' : 'text-gray-700 hover:bg-gray-100'">
+            <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10.5 12 3l9 7.5M5 9.5V21h5v-6h4v6h5V9.5"/></svg>
+            Beranda</a></li>
+          <li><a href="#/rekap" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors" :class="path==='/rekap' ? 'bg-brand-50 text-brand-500' : 'text-gray-700 hover:bg-gray-100'">
+            <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z"/></svg>
+            Rekap Iuran</a></li>
+          <li><a href="#/mutasi" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors" :class="path==='/mutasi' ? 'bg-brand-50 text-brand-500' : 'text-gray-700 hover:bg-gray-100'">
+            <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6M8 3h8a2 2 0 0 1 2 2v16l-3-2-3 2-3-2-3 2V5a2 2 0 0 1 2-2Z"/></svg>
+            Mutasi Kas</a></li>
+        </ul>
+        <h3 class="mb-3 px-3 text-xs font-medium uppercase leading-5 tracking-wide text-gray-400">Pengurus</h3>
+        <ul class="flex flex-col gap-1">
+          <li><a href="#/admin" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors" :class="path.startsWith('/admin') ? 'bg-brand-50 text-brand-500' : 'text-gray-700 hover:bg-gray-100'">
+            <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75M3.75 21v-6a3 3 0 0 1 3-3h10.5a3 3 0 0 1 3 3v6"/></svg>
+            Login Admin</a></li>
+        </ul>
+      </template>
+      <!-- ADMIN -->
+      <template v-else>
+        <h3 class="mb-3 px-3 text-xs font-medium uppercase leading-5 tracking-wide text-gray-400">Utama</h3>
+        <ul class="mb-6 flex flex-col gap-1">
+          <li><a href="#/admin" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors" :class="path==='/admin' ? 'bg-brand-50 text-brand-500' : 'text-gray-700 hover:bg-gray-100'">
+            <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5 12 4.5l8.25 9M5.75 21v-7.5h12.5V21"/></svg>
+            Dashboard</a></li>
+          <li><a href="#/admin/verifikasi" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors" :class="path==='/admin/verifikasi' ? 'bg-brand-50 text-brand-500' : 'text-gray-700 hover:bg-gray-100'">
+            <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+            Verifikasi
+            <span v-if="nPending" class="ml-auto rounded-full bg-error-500 px-2 py-0.5 text-[11px] font-semibold text-white">{{nPending}}</span></a></li>
+        </ul>
+        <h3 class="mb-3 px-3 text-xs font-medium uppercase leading-5 tracking-wide text-gray-400">Transaksi</h3>
+        <ul class="mb-6 flex flex-col gap-1">
+          <li><a href="#/admin/pengeluaran" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors" :class="path==='/admin/pengeluaran' ? 'bg-brand-50 text-brand-500' : 'text-gray-700 hover:bg-gray-100'">
+            <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z"/></svg>
+            Pemasukan &amp; Pengeluaran</a></li>
+          <li><a href="#/mutasi" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors" :class="path==='/mutasi' ? 'bg-brand-50 text-brand-500' : 'text-gray-700 hover:bg-gray-100'">
+            <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6M8 3h8a2 2 0 0 1 2 2v16l-3-2-3 2-3-2-3 2V5a2 2 0 0 1 2-2Z"/></svg>
+            Mutasi Kas</a></li>
+          <li><a href="#/" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors" :class="'text-gray-700 hover:bg-gray-100'">
+            <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
+            Lihat sebagai Warga</a></li>
+        </ul>
+        <h3 class="mb-3 px-3 text-xs font-medium uppercase leading-5 tracking-wide text-gray-400">Master Data</h3>
+        <ul class="flex flex-col gap-1">
+          <li><a href="#/admin/iuran" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors" :class="path==='/admin/iuran' ? 'bg-brand-50 text-brand-500' : 'text-gray-700 hover:bg-gray-100'">
+            <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.8 1.5 1M12 19.5 4.5 15V6L12 2l7.5 4v9L12 19.5Z"/></svg>
+            Jenis Iuran</a></li>
+          <li><a href="#/admin/master" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors" :class="path==='/admin/master' ? 'bg-brand-50 text-brand-500' : 'text-gray-700 hover:bg-gray-100'">
+            <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75"/></svg>
+            Data Rumah</a></li>
+          <li><a href="#/admin/pengjenis" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors" :class="path==='/admin/pengjenis' ? 'bg-brand-50 text-brand-500' : 'text-gray-700 hover:bg-gray-100'">
+            <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2m-6 9h6"/></svg>
+            Jenis Pengeluaran</a></li>
+        </ul>
+      </template>
+</nav>
+
+    <div class="border-t border-gray-200 py-4">
+      <button v-if="user" class="flex w-full items-center justify-center gap-2 rounded-lg border border-error-200 px-4 py-2.5 text-sm font-medium text-error-600 transition-colors hover:bg-error-50" @click="logout">
+        <svg class="size-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"/></svg>
+        Keluar Admin
+      </button>
+      <button v-else class="w-full rounded-lg px-4 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-100" @click="menuOpen=false">Tutup Menu</button>
+    </div>
+  </aside>
+
+  <!-- ===== CONTENT AREA ===== -->
+  <div class="flex min-h-screen flex-col transition-all duration-300" :class="contentClass">
+    <!-- HEADER (pola TailAdmin: sticky, burger kiri, page title) -->
+    <header class="sticky top-0 z-50 flex shrink-0 items-center border-b border-gray-200 bg-white px-4 py-3.5 sm:gap-4 sm:px-6 xl:px-8">
+      <button type="button" class="inline-flex size-10 shrink-0 items-center justify-center rounded-[10px] border border-gray-300 text-gray-500 transition-all hover:bg-gray-50 hover:text-gray-800" @click="toggleMenu" aria-label="Menu">
+        <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
+      </button>
+      <h1 class="text-lg font-semibold text-gray-800 sm:text-xl">{{pageTitle}}</h1>
+      <div class="ml-auto flex items-center gap-3">
+        <span v-if="user" class="hidden items-center gap-1.5 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-500 sm:flex">
+          <svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+          Admin
+        </span>
+      </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="flex-1 p-4 sm:p-6 xl:p-8">
+      <div class="mx-auto max-w-6xl">
+        <component :is="view" :key="path"></component>
+      </div>
+    </main>
+
+    <footer class="border-t border-gray-200 bg-white py-5 text-center text-xs text-gray-400">
+      Sistem Iuran · PNM Residence 2 Cileunyi · <a v-if="!user" href="#/admin" class="font-medium text-brand-500">Admin</a>
+    </footer>
+  </div>
+
+  <div v-if="toastMsg" class="fixed bottom-5 left-1/2 z-2000 -translate-x-1/2 rounded-lg bg-gray-900 px-5 py-3 text-sm text-white shadow-2xl">{{toastMsg}}</div>
+</div>
+
+<script>
+const SB_URL='https://kkakdfnuibxcaifyhgil.supabase.co';
+const SB_KEY='sb_publishable_hSh429uCmDwnmY-fALNVKA_EQYkfzCs';
+const sb=supabase.createClient(SB_URL,SB_KEY);
+const rupiah=n=>'Rp '+(n||0).toLocaleString('id-ID');
+const BLN=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+const blnLabel=ym=>{const[y,m]=ym.split('-');return BLN[+m-1]+' '+y};
+const sortNo=arr=>arr.sort((a,b)=>{
+  const N=n=>{const m=String(n).match(/^(\d+)([A-Za-z]?)$/);return m?[+m[1],m[2].toLowerCase()]:[9999,String(n)]};
+  const A=N(a.no),B=N(b.no);return A[0]-B[0]||A[1].localeCompare(B[1]);
+});
+
+// Pemasukan manual admin: pakai tabel pemasukan kalau sudah dibuat, sementara simpan di konfig
+const pemasukanStore={
+  _key:'pemasukan_data',_c:null,
+  async _init(){
+    if(this._c!==null)return;
+    const{data}=await sb.from('konfig').select('value').eq('key',this._key).maybeSingle();
+    try{this._c=JSON.parse((data&&data.value)||'[]')}catch(e){this._c=[]}
+  },
+  async list(){
+    const t=await sb.from('pemasukan').select('*').order('tanggal',{ascending:false}).limit(500);
+    if(!t.error)return t.data||[];
+    await this._init();
+    return [...this._c].sort((a,b)=>(b.tanggal||'').localeCompare(a.tanggal||''));
+  },
+  async add(rec){
+    const t=await sb.from('pemasukan').insert(rec);
+    if(!t.error)return;
+    await this._init();
+    this._c.push({id:'m'+Date.now()+Math.random().toString(36).slice(2,6),...rec});
+    await sb.from('konfig').upsert({key:this._key,value:JSON.stringify(this._c)},{onConflict:'key'});
+  },
+  async remove(id){
+    const t=await sb.from('pemasukan').delete().eq('id',id);
+    if(!t.error)return true;
+    await this._init();
+    this._c=this._c.filter(m=>m.id!==id);
+    await sb.from('konfig').upsert({key:this._key,value:JSON.stringify(this._c)},{onConflict:'key'});
+    return true;
+  }
+};
+
+// Catatan per tagihan (log kenapa nominal beda): konfig JSON, migrasi ke kolom begitu bisa DDL
+const catatanStore={
+  _key:'tagihan_catatan',_m:null,
+  async init(){
+    if(this._m!==null)return;
+    const{data}=await sb.from('konfig').select('value').eq('key',this._key).maybeSingle();
+    try{this._m=JSON.parse((data&&data.value)||'{}')}catch(e){this._m={}}
+  },
+  get(k){return this._m?(this._m[k]||''):''},
+  async set(k,v){
+    await this.init();
+    if(v)this._m[k]=v;else delete this._m[k];
+    await sb.from('konfig').upsert({key:this._key,value:JSON.stringify(this._m)},{onConflict:'key'});
+  }
+};
+const bulanIni=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')};
+const nextMonth=ym=>{const[y,m]=ym.split('-').map(Number);const d=new Date(y,m,1);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')};
+async function getKonfig(){
+  const{data}=await sb.from('konfig').select('*');
+  const k={};(data||[]).forEach(r=>k[r.key]=r.value);return k;
+}
+
+/* ============ BERANDA ============ */
+const Home={
+  template:`
+  <div class="space-y-4 sm:space-y-6">
+    <div class="rounded-2xl bg-gradient-to-br from-brand-500 to-brand-400 p-5 text-white sm:p-7">
+      <h2 class="text-lg font-bold sm:text-2xl">Iuran Komplek PNM Residence 2</h2>
+      <p class="mt-1 text-sm text-white/85">Cek tagihan & konfirmasi transfer iuran Anda</p>
+      <div class="mt-4 flex flex-wrap gap-2.5">
+        <a href="#/bayar" class="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-brand-500 shadow-sm transition-all hover:bg-brand-25">
+          <svg class="size-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m3.75-6h6.75a2.25 2.25 0 0 1 2.25 2.25v6.75a2.25 2.25 0 0 1-2.25 2.25H8.25a2.25 2.25 0 0 1-2.25-2.25v-6.75a2.25 2.25 0 0 1 2.25-2.25Z"/></svg>
+          Bayar Iuran Sekarang
+        </a>
+        <a href="#/rekap" class="inline-flex items-center gap-2 rounded-xl border border-white/40 px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-white/10">
+          Lihat Rekap Iuran
+        </a>
+      </div>
+    </div>
+
+    <div v-if="loading" class="rounded-xl border border-gray-200 bg-white p-6"><div class="animate-pulse space-y-3"><div class="h-4 w-2/3 rounded bg-gray-200"></div><div class="h-4 w-1/3 rounded bg-gray-200"></div></div></div>
+    <template v-else>
+    <div class="rounded-xl border border-gray-200 bg-white p-4 sm:p-6">
+      <div class="mb-4 flex flex-wrap items-center justify-between gap-2">
+        <span class="text-sm text-gray-500">Bulan: <b class="text-gray-800">{{blnLabel(bulan)}}</b></span>
+        <span class="flex gap-2">
+          <span class="rounded-full bg-success-50 px-3 py-1 text-xs font-semibold text-success-600">LUNAS {{nLunas}}</span>
+          <span class="rounded-full bg-error-50 px-3 py-1 text-xs font-semibold text-error-600">BELUM {{nBelum}}</span>
+        </span>
+      </div>
+      <div class="grid grid-cols-5 gap-2 sm:grid-cols-8 lg:grid-cols-10">
+        <a v-for="r in rumah" :key="r.no" :href="'#/rumah/'+r.no"
+          class="rounded-xl border py-2.5 text-center transition-all hover:-translate-y-0.5 hover:shadow-theme-xs"
+          :class="r._st==='LUNAS' ? 'border-success-500/50 bg-success-50' : (r._st==='—' ? 'border-gray-200 bg-gray-50 opacity-50' : 'border-error-500/50 bg-error-50')">
+          <div class="text-lg font-bold" :class="r._st==='—' ? 'text-gray-400' : 'text-brand-500'">{{r.no}}</div>
+          <div class="text-[10px] font-semibold" :class="r._st==='LUNAS' ? 'text-success-600' : (r._st==='—' ? 'text-gray-400' : 'text-error-500')">{{r._st}}</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-3 gap-3 sm:gap-5">
+      <div class="rounded-xl border border-gray-200 bg-white p-4 sm:p-6">
+        <div class="text-sm font-semibold text-gray-800 tabular-nums sm:text-2xl">{{rupiah(kas)}}</div>
+        <div class="mt-1 text-[10px] font-medium uppercase tracking-wide text-gray-400 sm:text-xs">Saldo Kas</div>
+      </div>
+      <div class="rounded-xl border border-gray-200 bg-white p-4 sm:p-6">
+        <div class="text-sm font-semibold text-success-600 tabular-nums sm:text-2xl">{{rupiah(masukBln)}}</div>
+        <div class="mt-1 text-[10px] font-medium uppercase tracking-wide text-gray-400 sm:text-xs">Masuk Bln Ini</div>
+      </div>
+      <div class="rounded-xl border border-gray-200 bg-white p-4 sm:p-6">
+        <div class="text-sm font-semibold text-error-500 tabular-nums sm:text-2xl">{{rupiah(keluarBln)}}</div>
+        <div class="mt-1 text-[10px] font-medium uppercase tracking-wide text-gray-400 sm:text-xs">Keluar Bln Ini</div>
+      </div>
+    </div>
+    <div class="overflow-hidden rounded-xl border border-gray-200 bg-white">
+      <div class="border-b border-gray-100 px-4 py-4 sm:px-6 sm:py-5">
+        <h3 class="text-base font-semibold text-gray-800">Pengeluaran — {{blnLabel(bulan)}}</h3>
+      </div>
+      <div class="p-4 sm:p-6">
+        <p v-if="!keluar.length" class="text-sm text-gray-400">Belum ada pengeluaran tercatat bulan ini.</p>
+        <div v-else class="overflow-x-auto">
+          <table class="min-w-full">
+            <thead><tr class="border-b border-gray-100">
+              <th class="px-3 py-3 text-start text-xs font-medium text-gray-400 sm:px-5">Tanggal</th>
+              <th class="px-3 py-3 text-start text-xs font-medium text-gray-400 sm:px-5">Kategori</th>
+              <th class="px-3 py-3 text-end text-xs font-medium text-gray-400 sm:px-5">Nominal</th>
+            </tr></thead>
+            <tbody>
+              <tr v-for="k in keluar" class="border-b border-gray-50 last:border-0 hover:bg-gray-50/50">
+                <td class="whitespace-nowrap px-3 py-3.5 text-sm text-gray-600 sm:px-5">{{k.tanggal.slice(8)}}</td>
+                <td class="px-3 py-3.5 text-sm text-gray-700 sm:px-5">{{k.kategori}}<div v-if="k.keterangan" class="text-xs text-gray-400">{{k.keterangan}}</div></td>
+                <td class="px-3 py-3.5 text-end text-sm font-semibold tabular-nums text-gray-800 sm:px-5">{{rupiah(k.nominal)}}</td>
+              </tr>
+              <tr class="bg-gray-50/50">
+                <td colspan="2" class="px-3 py-3.5 text-sm font-bold text-gray-800 sm:px-5">Total</td>
+                <td class="px-3 py-3.5 text-end text-sm font-bold tabular-nums text-error-500 sm:px-5">{{rupiah(keluarBln)}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    </template>
+  </div>`,
+  data(){return{loading:true,rumah:[],bulan:bulanIni(),keluar:[],kas:0,masukBln:0}},
+  computed:{
+    nLunas(){return this.rumah.filter(r=>r._st==='LUNAS').length},
+    nBelum(){return this.rumah.filter(r=>r._st==='BELUM').length},
+    keluarBln(){return this.keluar.reduce((s,k)=>s+k.nominal,0)}
+  },
+  async mounted(){await this.load()},
+  methods:{
+    rupiah,blnLabel,
+    namaPendek(p){return p?p.split(' ').slice(0,2).join(' '):''},
+    async load(){
+      const[{data:rs},{data:tg},{data:pay},{data:kel}]=await Promise.all([
+        sb.from('rumah').select('*').order('no'),
+        sb.from('tagihan').select('rumah_id,status').eq('bulan',this.bulan),
+        sb.from('pembayaran').select('nominal,verified_at,tgl_transfer').eq('status','VERIFIED'),
+        sb.from('pengeluaran').select('*')
+      ]);
+      const st={};(tg||[]).forEach(t=>st[t.rumah_id]=t.status);
+      this.rumah=sortNo(rs||[]).map(r=>{r._st=!r.aktif?'—':(st[r.id]==='LUNAS'?'LUNAS':'BELUM');return r});
+      const masuk=(pay||[]).reduce((s,p)=>s+p.nominal,0);
+      const keluarAll=(kel||[]).reduce((s,k)=>s+k.nominal,0);
+      this.kas=masuk-keluarAll;
+      this.keluar=(kel||[]).filter(k=>k.tanggal&&k.tanggal.startsWith(this.bulan));
+      this.masukBln=(pay||[]).filter(p=>((p.verified_at||p.tgl_transfer)+'').slice(0,7)===this.bulan).reduce((s,p)=>s+p.nominal,0);
+      this.loading=false;
+    }
+  }
+};
+
+/* ============ HALAMAN RUMAH ============ */
+const RumahPage={
+  template:`
+  <div class="mx-auto max-w-2xl space-y-4 sm:space-y-5">
+    <a :href="dariBayar ? '#/bayar' : '#/'" class="inline-flex items-center gap-1.5 text-sm font-medium text-brand-500 hover:text-brand-600">
+      <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"/></svg>
+      {{ dariBayar ? 'Pilih Rumah Lain' : 'Semua Rumah' }}
+    </a>
+
+    <div v-if="loading" class="rounded-xl border border-gray-200 bg-white p-6"><div class="animate-pulse space-y-3"><div class="h-5 w-1/2 rounded bg-gray-200"></div><div class="h-4 w-1/3 rounded bg-gray-200"></div></div></div>
+    <template v-else-if="r">
+      <div class="rounded-xl border border-gray-200 bg-white p-5 sm:p-6">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-xl font-bold text-gray-800">Rumah No. {{r.no}}</h2>
+            <p class="text-sm text-gray-400">{{r.pemilik}}</p>
+          </div>
+          <span class="rounded-full px-4 py-1.5 text-sm font-semibold text-white" :class="lunasSd?'bg-success-500':'bg-error-500'">
+            {{lunasSd?'LUNAS s/d '+blnLabel(lunasSd):'BELUM BAYAR'}}
+          </span>
+        </div>
+      </div>
+
+      <div class="overflow-hidden rounded-xl border border-gray-200 bg-white">
+        <div class="border-b border-gray-100 px-5 py-4 sm:px-6"><h3 class="font-semibold text-gray-800">Tagihan — {{blnLabel(bulan)}}</h3></div>
+        <div class="p-5 sm:p-6">
+          <table v-if="items.length" class="min-w-full">
+            <tbody>
+              <tr v-for="i in items" class="border-b border-gray-50 last:border-0">
+                <td class="py-3 text-sm text-gray-700">{{i.label}}</td>
+                <td class="py-3 text-end text-sm font-semibold tabular-nums text-gray-800">{{rupiah(i.nominal)}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div v-if="items.length" class="mt-3 flex items-center justify-between border-t-2 border-gray-100 pt-3">
+            <span class="font-bold text-gray-800">Total</span>
+            <span class="text-lg font-bold tabular-nums text-brand-500">{{rupiah(total)}}</span>
+          </div>
+          <p v-else class="text-sm text-gray-400">Belum ada tagihan bulan ini.</p>
+        </div>
+      </div>
+
+      <div v-if="tunggakan.length" class="rounded-xl border border-error-200 bg-error-50/50 p-5 sm:p-6">
+        <h3 class="mb-2 font-semibold text-error-600">Tunggakan</h3>
+        <div v-for="t in tunggakan" class="flex items-center justify-between py-1.5 text-sm">
+          <span class="text-gray-700">{{blnLabel(t.bulan)}}</span>
+          <b class="tabular-nums text-error-600">{{rupiah(t.total)}}</b>
+        </div>
+      </div>
+
+      <div class="rounded-xl border border-gray-200 bg-white p-5 sm:p-6">
+        <h3 class="mb-3 font-semibold text-gray-800">Cara Pembayaran</h3>
+        <div v-if="konfig.qris_url&&konfig.qris_url!=='-'" class="mb-3 text-center">
+          <img :src="konfig.qris_url" class="mx-auto w-full max-w-[200px] rounded-xl border border-gray-200">
+        </div>
+        <p class="text-sm font-medium text-gray-800">{{konfig.rekening||'Rekening belum diatur admin'}}</p>
+        <p class="mt-2 text-xs text-gray-400">Setelah transfer, tekan tombol di bawah agar cepat diverifikasi.</p>
+      </div>
+
+      <button class="w-full rounded-xl bg-brand-500 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-brand-600" @click="showForm=true">
+        <svg class="mr-1.5 inline size-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+        Konfirmasi Transfer Saya
+      </button>
+
+      <div class="overflow-hidden rounded-xl border border-gray-200 bg-white">
+        <div class="border-b border-gray-100 px-5 py-4 sm:px-6"><h3 class="font-semibold text-gray-800">Riwayat</h3></div>
+        <div class="p-5 sm:p-6">
+          <div v-for="rw in riwayat" class="py-2 text-sm">
+            <div class="flex items-center justify-between">
+              <span class="text-gray-700">{{blnLabel(rw.bulan)}} <span class="text-xs tabular-nums text-gray-400">{{rupiah(rw.total)}}</span></span>
+              <span class="rounded-full px-3 py-1 text-xs font-semibold text-white" :class="rw.status==='LUNAS'?'bg-success-500':'bg-error-500'">{{rw.status}}</span>
+            </div>
+            <div v-if="rw.catatan" class="mt-0.5 text-xs text-gray-400">ℹ {{rw.catatan}}</div>
+          </div>
+          <p v-if="!riwayat.length" class="text-sm text-gray-400">Belum ada riwayat.</p>
+        </div>
+      </div>
+
+      <!-- Modal bayar (pola TailAdmin modal) -->
+      <div v-if="showForm" class="fixed inset-0 z-1000 flex items-end justify-center bg-gray-900/50 p-0 sm:items-center sm:p-4" @click.self="showForm=false">
+        <div class="w-full max-w-md rounded-t-2xl bg-white shadow-2xl sm:rounded-2xl">
+          <div class="flex items-center justify-between border-b border-gray-100 px-5 py-4">
+            <h3 class="font-semibold text-gray-800">Konfirmasi Transfer Iuran</h3>
+            <button class="text-gray-400 hover:text-gray-700" @click="showForm=false">
+              <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+          <div class="max-h-[65vh] overflow-y-auto p-5">
+            <p class="mb-4 text-sm text-gray-400">Rumah No. {{r.no}} — akan diverifikasi admin</p>
+            <div v-if="perBulan>0" class="mb-5">
+              <label class="mb-2 block text-sm font-medium text-gray-700">Bayar Berapa Bulan?</label>
+              <div class="flex flex-wrap gap-2">
+                <button v-for="n in [1,2,3,6,12]" :key="n" class="rounded-lg px-3.5 py-2 text-sm font-medium transition-colors"
+                  :class="bulanPilih===n?'bg-brand-500 text-white':'border border-gray-200 text-gray-600 hover:bg-gray-50'"
+                  @click="pilihBulan(n)">{{n}} bln</button>
+              </div>
+              <p class="mt-2 text-xs text-gray-400">1 bulan = {{rupiah(perBulan)}}{{tunggakan.length?' (tunggakan dilunasi dulu otomatis)':''}}</p>
+            </div>
+            <div class="mb-4">
+              <label class="mb-1.5 block text-sm font-medium text-gray-700">Nominal Transfer (Rp)</label>
+              <input type="number" v-model.number="form.nominal" placeholder="mis. 75000" min="1000"
+                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20">
+              <p v-if="saran" class="mt-1.5 text-xs font-medium text-success-600">{{saran}}</p>
+            </div>
+            <div class="mb-4">
+              <label class="mb-1.5 block text-sm font-medium text-gray-700">Tanggal Transfer</label>
+              <input type="date" v-model="form.tgl" :max="today" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20">
+            </div>
+            <div>
+              <label class="mb-1.5 block text-sm font-medium text-gray-700">Bukti Transfer (foto/screenshot)</label>
+              <input type="file" accept="image/*" @change="onFile" class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm file:mr-3 file:rounded-md file:border-0 file:bg-brand-50 file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-brand-500">
+            </div>
+          </div>
+          <div class="flex gap-3 border-t border-gray-100 px-5 py-4">
+            <button class="flex-1 rounded-lg border border-gray-200 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50" @click="showForm=false">Batal</button>
+            <button class="flex-[2] rounded-lg bg-brand-500 py-2.5 text-sm font-semibold text-white hover:bg-brand-600 disabled:opacity-50" :disabled="busy||!form.nominal" @click="submit">
+              {{busy?'Mengirim…':'Kirim Konfirmasi'}}
+            </button>
+          </div>
+        </div>
+      </div>
+    </template>
+    <div v-else class="py-16 text-center text-gray-400">Rumah tidak ditemukan.</div>
+  </div>`,
+  data(){return{loading:true,r:null,items:[],tunggakan:[],riwayat:[],konfig:{},bulan:bulanIni(),showForm:false,busy:false,lunasSd:null,bulanPilih:null,form:{nominal:null,tgl:new Date().toISOString().slice(0,10)},file:null,today:new Date().toISOString().slice(0,10)}},
+  computed:{
+    dariBayar(){return this.$root.path.startsWith('/bayar')},
+    total(){return this.items.reduce((s,i)=>s+i.nominal,0)},
+    perBulan(){return this.total||0},
+    saran(){
+      if(!this.form.nominal)return'';
+      const list=[...this.tunggakan.map(t=>t.total)];if(this.total)list.push(this.total);
+      let rem=this.form.nominal,n=0;
+      for(const v of list){if(rem>=v){rem-=v;n++}else break}
+      if(rem>0&&n>0)return'≈ '+n+' bulan + sisa '+rupiah(rem);
+      if(n>0)return'≈ cukup untuk '+n+' bulan';
+      return''
+    }
+  },
+  async mounted(){
+    const no=+this.$root.params.no;
+    const{data:rs}=await sb.from('rumah').select('*').eq('no',no).single();
+    if(!rs){this.loading=false;return}
+    this.r=rs;
+    this.konfig=await getKonfig();
+    const[{data:it},{data:tgs}]=await Promise.all([
+      sb.from('iuran_item').select('*').eq('rumah_id',rs.id).eq('aktif',true),
+      sb.from('tagihan').select('*').eq('rumah_id',rs.id).order('bulan',{ascending:false}).limit(13)
+    ]);
+    this.items=it||[];
+    const tg=tgs||[];
+    this.tunggakan=tg.filter(t=>t.bulan<this.bulan&&t.status!=='LUNAS').sort((a,b)=>a.bulan.localeCompare(b.bulan));
+    await catatanStore.init();
+    this.riwayat=tg.slice(0,12).map(t=>({bulan:t.bulan,status:t.status,total:t.total||0,catatan:catatanStore.get(rs.id+'_'+t.bulan)}));
+    const sorted=[...tg].sort((a,b)=>a.bulan.localeCompare(b.bulan));
+    let last=null;
+    for(const t of sorted){if(t.status==='LUNAS')last=t.bulan;else break}
+    this.lunasSd=last;
+    this.loading=false;
+  },
+  methods:{
+    rupiah,blnLabel,
+    pilihBulan(n){
+      this.bulanPilih=n;
+      const list=[...this.tunggakan.map(t=>t.total)];
+      let count=list.length;
+      while(count<n){list.push(this.total);count++}
+      this.form.nominal=list.slice(0,n).reduce((s,v)=>s+v,0)||null;
+    },
+    onFile(e){this.file=e.target.files[0]},
+    async submit(){
+      this.busy=true;
+      try{
+        let url=null;
+        if(this.file){
+          try{
+            const ext=(this.file.name.split('.').pop()||'jpg').toLowerCase();
+            const path='bukti/'+this.r.no+'_'+Date.now()+'.'+ext;
+            await sb.storage.from('bukti').upload(path,this.file);
+            url=sb.storage.from('bukti').getPublicUrl(path).data.publicUrl;
+          }catch(e){}
+        }
+        const{error}=await sb.from('pembayaran').insert({rumah_id:this.r.id,nominal:this.form.nominal,tgl_transfer:this.form.tgl,bukti_url:url});
+        if(error)throw error;
+        this.$root.toast('Konfirmasi terkirim! Menunggu verifikasi admin.');
+        this.showForm=false;this.form.nominal=null;this.file=null;
+      }catch(e){this.$root.toast('Gagal mengirim: '+(e.message||'coba lagi'))}
+      this.busy=false;
+    }
+  }
+};
+
+
+/* ============ REKAP TAHUNAN (menu terpisah) ============ */
+const Rekap={
+  template:`
+  <div class="overflow-hidden rounded-xl border border-gray-200 bg-white">
+    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-gray-100 p-4 sm:px-6 sm:py-5">
+      <div>
+        <h2 class="text-base font-semibold text-gray-800">Rekap Iuran Tahun {{tahun}}</h2>
+        <p class="mt-0.5 text-xs text-gray-400">Geser ke samping · <b class="text-success-600">✓ lunas</b> · <b class="text-error-500">✗ belum</b></p>
+      </div>
+      <div class="flex gap-1.5">
+        <button class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50" @click="tahun--">‹ {{tahun-1}}</button>
+        <button class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50" @click="tahun++">{{tahun+1}} ›</button>
+        <button class="rounded-lg bg-brand-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-600" @click="exportCsv">⬇ CSV</button>
+      </div>
+    </div>
+    <div class="p-4 sm:p-6">
+      <div v-if="loading" class="animate-pulse space-y-3"><div class="h-4 w-full rounded bg-gray-200"></div><div class="h-4 w-2/3 rounded bg-gray-200"></div></div>
+      <div v-else class="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+        <table class="min-w-full border-separate border-spacing-0">
+          <thead>
+            <tr>
+              <th class="sticky left-0 z-10 bg-white px-3 py-2.5 text-start text-xs font-medium text-gray-400 sm:px-5">Rumah</th>
+              <th v-for="m in 12" class="px-2.5 py-2.5 text-center text-xs font-medium text-gray-400">{{BLN[m-1]}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="row in yearRows" class="group">
+              <td class="sticky left-0 z-10 whitespace-nowrap border-b border-gray-100 bg-white px-3 py-2.5 text-sm sm:px-5 group-hover:bg-gray-50">
+                <b class="text-gray-800">{{row.no}}</b> <span class="hidden text-sm text-gray-800 sm:inline">{{namaPendek(row.pemilik)}}</span>
+              </td>
+              <td v-for="m in 12" class="border-b border-gray-100 px-2.5 py-2.5 text-center">
+                <span v-if="row.marks[m-1]==='L'" class="inline-flex size-6 items-center justify-center rounded-full bg-success-500 text-white" title="Lunas">
+                  <svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+                </span>
+                <span v-else-if="row.marks[m-1]==='X'" class="inline-flex size-6 items-center justify-center rounded-full bg-error-500 text-white" title="Belum bayar">
+                  <svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+                </span>
+                <span v-else class="text-gray-300">·</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>`,
+  data(){return{loading:true,yearRows:[],tahun:new Date().getFullYear(),BLN:BLN}},
+  async mounted(){await this.load()},
+  watch:{tahun(){this.load()}},
+  methods:{
+    namaPendek(p){return p?p.split(' ').slice(0,2).join(' '):''},
+    exportCsv(){
+      const esc=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
+      const head=['Rumah','Pemilik',...BLN.map((b,i)=>b+' '+this.tahun)];
+      const lines=[head.map(esc).join(',')];
+      for(const row of this.yearRows){
+        lines.push([row.no,row.pemilik,...row.marks.map(m=>m==='L'?'LUNAS':m==='X'?'BELUM':'-')].map(esc).join(','));
+      }
+      const blob=new Blob(["\ufeff"+lines.join('\n')],{type:'text/csv;charset=utf-8'});
+      const a=document.createElement('a');
+      a.href=URL.createObjectURL(blob);
+      a.download='rekap-iuran-'+this.tahun+'.csv';
+      a.click();URL.revokeObjectURL(a.href);
+      this.$root.toast('Rekap '+this.tahun+' diunduh');
+    },
+    async load(){
+      this.loading=true;
+      const[{data:rs},{data:tgs}]=await Promise.all([
+        sb.from('rumah').select('*').order('no'),
+        sb.from('tagihan').select('rumah_id,bulan,status').gte('bulan',this.tahun+'-01').lte('bulan',this.tahun+'-12')
+      ]);
+      const byRumah={};(tgs||[]).forEach(t=>{
+        const m=+t.bulan.slice(5,7)-1;
+        (byRumah[t.rumah_id]=byRumah[t.rumah_id]||Array(12).fill(null))[m]=t.status==='LUNAS'?'L':'X';
+      });
+      this.yearRows=sortNo((rs||[]).filter(r=>r.aktif)).map(r=>({no:r.no,pemilik:r.pemilik,marks:byRumah[r.id]||Array(12).fill(null)}));
+      this.loading=false;
+    }
+  }
+};
+
+
+/* ============ BAYAR IURAN (alur langsung: pilih rumah → form) ============ */
+const BayarPage={
+  template:`
+  <div class="mx-auto max-w-2xl space-y-4 sm:space-y-5">
+    <!-- step 1: pilih rumah -->
+    <div v-if="!r" class="rounded-xl border border-gray-200 bg-white p-5 sm:p-6">
+      <h2 class="text-lg font-bold text-gray-800">Pilih Nomor Rumah Anda</h2>
+      <p class="mt-1 text-sm text-gray-400">Rumah mana yang ingin bayar / konfirmasi iuran?</p>
+      <div class="mt-4 grid grid-cols-5 gap-2 sm:grid-cols-8">
+        <a v-for="h in daftar" :key="h.no" :href="'#/bayar/'+h.no"
+          class="rounded-xl border py-2.5 text-center transition-all hover:-translate-y-0.5 hover:border-brand-400 hover:shadow-theme-xs"
+          :class="h._st==='LUNAS' ? 'border-success-500/50 bg-success-50' : (h._st==='—' ? 'border-gray-200 bg-gray-50 opacity-50' : 'border-error-500/50 bg-error-50')">
+          <div class="text-lg font-bold text-brand-500">{{h.no}}</div>
+          <div class="text-[10px] font-semibold" :class="h._st==='LUNAS' ? 'text-success-600' : (h._st==='—' ? 'text-gray-400' : 'text-error-500')">{{h._st}}</div>
+        </a>
+      </div>
+      <p class="mt-4 text-xs text-gray-400">Sudah tahu nomor rumah? Anda juga bisa klik nomor di <a href="#/" class="font-medium text-brand-500">Beranda</a>.</p>
+    </div>
+  </div>`,
+  data(){return{daftar:[]}},
+  async mounted(){
+    const[{data:rs},{data:tg}]=await Promise.all([
+      sb.from('rumah').select('*').order('no'),
+      sb.from('tagihan').select('rumah_id,status').eq('bulan',bulanIni())
+    ]);
+    const st={};(tg||[]).forEach(t=>st[t.rumah_id]=t.status);
+    this.daftar=sortNo(rs||[]).map(r=>{r._st=!r.aktif?'—':(st[r.id]==='LUNAS'?'LUNAS':'BELUM');return r});
+  }
+};
+
+/* ============ MUTASI ============ */
+const Mutasi={
+  template:`
+  <div class="space-y-4 sm:space-y-6">
+    <div class="grid grid-cols-3 gap-3 sm:gap-5">
+      <div class="rounded-xl border border-gray-200 bg-white p-4 sm:p-6">
+        <div class="text-sm font-semibold text-gray-800 tabular-nums sm:text-2xl">{{rupiah(kas)}}</div>
+        <div class="mt-1 text-[10px] font-medium uppercase tracking-wide text-gray-400 sm:text-xs">Saldo Kas</div>
+      </div>
+      <div class="rounded-xl border border-gray-200 bg-white p-4 sm:p-6">
+        <div class="text-sm font-semibold text-success-600 tabular-nums sm:text-2xl">+{{rupiah(totMasuk)}}</div>
+        <div class="mt-1 text-[10px] font-medium uppercase tracking-wide text-gray-400 sm:text-xs">Total Masuk</div>
+      </div>
+      <div class="rounded-xl border border-gray-200 bg-white p-4 sm:p-6">
+        <div class="text-sm font-semibold text-error-500 tabular-nums sm:text-2xl">−{{rupiah(totKeluar)}}</div>
+        <div class="mt-1 text-[10px] font-medium uppercase tracking-wide text-gray-400 sm:text-xs">Total Keluar</div>
+      </div>
+    </div>
+
+    <div class="overflow-hidden rounded-xl border border-gray-200 bg-white">
+      <div class="border-b border-gray-100 p-4 sm:px-6 sm:py-5">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <h3 class="text-base font-semibold text-gray-800">Rekening Koran Komplek</h3>
+          <div class="ml-auto flex flex-wrap items-center gap-1.5">
+            <button class="rounded-lg bg-brand-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-600" @click="exportCsv">⬇ CSV</button>
+            <button v-for="f in [['all','Semua'],['masuk','Masuk'],['keluar','Keluar']]" :key="f[0]"
+              class="rounded-lg px-3.5 py-1.5 text-xs font-medium transition-colors"
+              :class="filter===f[0]?'bg-brand-500 text-white':'border border-gray-200 text-gray-600 hover:bg-gray-50'"
+              @click="filter=f[0]">{{f[1]}}</button>
+          </div>
+        </div>
+        <div class="mt-3 grid grid-cols-2 gap-2.5 sm:grid-cols-12">
+          <div class="relative col-span-2 sm:col-span-4">
+            <svg class="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/></svg>
+            <input v-model="q" placeholder="Cari rumah / keterangan…" class="w-full rounded-lg border border-gray-300 py-2 pl-10 pr-3.5 text-sm outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20">
+          </div>
+          <div class="sm:col-span-2">
+            <select v-model="bulanF" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-600 outline-none focus:border-brand-500">
+              <option value="">Semua bulan</option>
+              <option v-for="b in bulanOpsi" :value="b">{{blnLabel(b)}}</option>
+            </select>
+          </div>
+          <div class="sm:col-span-3">
+            <select v-model="katF" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-600 outline-none focus:border-brand-500">
+              <option value="">Semua kategori</option>
+              <option v-for="k in kategoriOpsi" :value="k">{{k}}</option>
+            </select>
+          </div>
+          <div class="sm:col-span-1">
+            <input type="date" v-model="dari" class="w-full rounded-lg border border-gray-300 px-2 py-2 text-xs text-gray-600 outline-none focus:border-brand-500" title="Dari">
+          </div>
+          <div class="sm:col-span-1">
+            <input type="date" v-model="sampai" class="w-full rounded-lg border border-gray-300 px-2 py-2 text-xs text-gray-600 outline-none focus:border-brand-500" title="Sampai">
+          </div>
+          <div class="sm:col-span-1">
+            <button v-if="dari||sampai||q||bulanF||katF" class="w-full rounded-lg border border-gray-200 px-2 py-2 text-xs font-medium text-gray-500 hover:bg-gray-50" title="Reset semua filter" @click="resetF">✕</button>
+          </div>
+        </div>
+      </div>
+      <div class="p-4 sm:p-6">
+        <p v-if="!filtered.length" class="py-6 text-center text-sm text-gray-400">Tidak ada transaksi yang cocok.</p>
+        <div v-else class="overflow-x-auto">
+          <table class="min-w-full">
+            <thead><tr class="border-b border-gray-100">
+              <th class="px-3 py-3 text-start text-xs font-medium text-gray-400 sm:px-5">Tgl</th>
+              <th class="px-3 py-3 text-start text-xs font-medium text-gray-400 sm:px-5">Keterangan</th>
+              <th class="px-3 py-3 text-start text-xs font-medium text-gray-400 sm:px-5">Pemilik / Penerima</th>
+              <th class="px-3 py-3 text-end text-xs font-medium text-gray-400 sm:px-5">Nominal</th>
+            </tr></thead>
+            <tbody>
+              <tr v-for="t in filtered" class="border-b border-gray-50 last:border-0 hover:bg-gray-50/50">
+                <td class="whitespace-nowrap px-3 py-3.5 text-sm text-gray-600 sm:px-5">{{t.tgl}}</td>
+                <td class="px-3 py-3.5 text-sm text-gray-700 sm:px-5">{{t.ket}}</td>
+                <td class="px-3 py-3.5 text-sm sm:px-5">
+                  <span :class="t.masuk?'text-gray-600':'text-gray-600'">{{t.pihak||'-'}}</span>
+                </td>
+                <td class="px-3 py-3.5 text-end text-sm font-semibold tabular-nums sm:px-5" :class="t.masuk?'text-success-600':'text-error-500'">
+                  {{t.masuk ? '+'+rupiah(t.masuk) : '−'+rupiah(t.keluar)}}
+                </td>
+              </tr>
+              <tr class="bg-gray-50/60">
+                <td colspan="3" class="px-3 py-3.5 text-sm font-bold text-gray-800 sm:px-5">Total ({{filtered.length}} transaksi)</td>
+                <td class="px-3 py-3.5 text-end text-sm font-bold tabular-nums sm:px-5">
+                  <span class="text-success-600">+{{rupiah(fMasuk)}}</span>
+                  <span class="mx-1 text-gray-300">|</span>
+                  <span class="text-error-500">−{{rupiah(fKeluar)}}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>`,
+  data(){return{mutasi:[],kas:0,totMasuk:0,totKeluar:0,filter:'all',q:'',dari:'',sampai:'',bulanF:'',katF:''}},
+  computed:{
+    bulanOpsi(){
+      const set=new Set(this.mutasi.map(t=>t.tgl.slice(0,7)));
+      return [...set].sort().reverse();
+    },
+    kategoriOpsi(){
+      const set=new Set(this.mutasi.map(t=>t.kat));
+      return [...set].sort();
+    },
+    filtered(){
+      let out=this.mutasi;
+      if(this.filter==='masuk')out=out.filter(t=>t.masuk);
+      if(this.filter==='keluar')out=out.filter(t=>t.keluar);
+      if(this.q){const qq=this.q.toLowerCase();out=out.filter(t=>(t.ket+' '+t.pihak).toLowerCase().includes(qq))}
+      if(this.bulanF)out=out.filter(t=>t.tgl.startsWith(this.bulanF));
+      if(this.katF)out=out.filter(t=>t.kat===this.katF);
+      if(this.dari)out=out.filter(t=>t.tgl>=this.dari);
+      if(this.sampai)out=out.filter(t=>t.tgl<=this.sampai);
+      return out;
+    },
+    fMasuk(){return this.filtered.reduce((s,t)=>s+t.masuk,0)},
+    fKeluar(){return this.filtered.reduce((s,t)=>s+t.keluar,0)}
+  },
+  async mounted(){
+    const[{data:rs},{data:pay},{data:kel}]=await Promise.all([
+      sb.from('rumah').select('*'),
+      sb.from('pembayaran').select('nominal,rumah_id,tgl_transfer,verified_at').eq('status','VERIFIED').order('verified_at',{ascending:false}).limit(200),
+      sb.from('pengeluaran').select('*').order('tanggal',{ascending:false}).limit(200)
+    ]);
+    const rumahMap={};(rs||[]).forEach(r=>rumahMap[r.id]=r);
+    const masuk=(pay||[]).map(p=>{
+      const rumah=rumahMap[p.rumah_id];
+      return{
+        tgl:(p.verified_at||p.tgl_transfer).slice(0,10),
+        ket:'Iuran rumah no.'+(rumah?rumah.no:'?'),
+        pihak:rumah?rumah.pemilik:'',
+        kat:'Iuran',
+        masuk:p.nominal,keluar:0,_t:(p.verified_at||p.tgl_transfer)
+      };
+    });
+    const keluarM=(kel||[]).map(k=>({
+      tgl:k.tanggal,
+      ket:k.kategori,
+      pihak:k.penerima||k.keterangan||'',
+      kat:k.kategori,
+      masuk:0,keluar:k.nominal,_t:k.tanggal
+    }));
+    const pm=(await pemasukanStore.list()).map(m=>({
+      tgl:m.tanggal,ket:m.kategori||'Pemasukan',pihak:m.dari||'',kat:m.kategori||'Pemasukan',
+      masuk:m.nominal,keluar:0,_t:m.tanggal
+    }));
+    this.mutasi=[...masuk,...keluarM,...pm].sort((a,b)=>b._t.localeCompare(a._t));
+    this.totMasuk=[...masuk,...pm].reduce((s,t)=>s+t.masuk,0);
+    this.totKeluar=keluarM.reduce((s,t)=>s+t.keluar,0);
+    this.kas=this.totMasuk-this.totKeluar;
+  },
+  methods:{
+    rupiah,blnLabel,
+    resetF(){this.q='';this.dari='';this.sampai='';this.bulanF='';this.katF='';this.filter='all'},
+    exportCsv(){
+      const esc=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
+      const head=['Tanggal','Keterangan','Pihak','Kategori','Masuk','Keluar'];
+      const lines=[head.map(esc).join(',')];
+      for(const t of this.filtered){
+        lines.push([t.tgl,t.ket,t.pihak||'-',t.kat,t.masuk||'',t.keluar||''].map(esc).join(','));
+      }
+      const blob=new Blob(["\ufeff"+lines.join('\n')],{type:'text/csv;charset=utf-8'});
+      const a=document.createElement('a');
+      a.href=URL.createObjectURL(blob);
+      a.download='mutasi-kas.csv';
+      a.click();URL.revokeObjectURL(a.href);
+      this.$root.toast('Mutasi diunduh ('+this.filtered.length+' baris)');
+    }
+  }
+};
+
+/* ============ LOGIN ADMIN ============ */
+const AdminLogin={
+  template:`
+  <div class="mx-auto max-w-sm py-8 sm:py-14">
+    <div class="rounded-2xl border border-gray-200 bg-white p-6 sm:p-8">
+      <div class="mb-6 text-center">
+        <div class="mx-auto mb-3 flex size-14 items-center justify-center rounded-2xl bg-brand-50">
+          <svg class="size-7 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75M3.75 21v-6a3 3 0 0 1 3-3h10.5a3 3 0 0 1 3 3v6"/></svg>
+        </div>
+        <h2 class="text-xl font-bold text-gray-800">Login Admin</h2>
+        <p class="mt-1 text-sm text-gray-400">Halaman khusus pengurus komplek</p>
+      </div>
+      <div class="mb-4">
+        <label class="mb-1.5 block text-sm font-medium text-gray-700">Email</label>
+        <input type="email" v-model="email" placeholder="email admin" @keyup.enter="login"
+          class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20">
+      </div>
+      <div class="mb-6">
+        <label class="mb-1.5 block text-sm font-medium text-gray-700">Password</label>
+        <input type="password" v-model="pass" @keyup.enter="login"
+          class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20">
+      </div>
+      <button class="w-full rounded-xl bg-brand-500 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-600 disabled:opacity-50" :disabled="busy" @click="login">
+        {{busy?'Memeriksa…':'Masuk'}}
+      </button>
+      <p v-if="err" class="mt-3 text-center text-sm text-error-500">{{err}}</p>
+    </div>
+  </div>`
+  ,
+  data(){return{email:'',pass:'',busy:false,err:''}},
+  methods:{
+    async login(){
+      this.busy=true;this.err='';
+      const{error}=await sb.auth.signInWithPassword({email:this.email,password:this.pass});
+      if(!error)this.$root.go('/admin');
+      else this.err='Email atau password salah.';
+      this.busy=false;
+    }
+  }
+};
+
+/* ============ ADMIN DASHBOARD ============ */
+const AdminDash={
+  template:`
+  <div class="space-y-4 sm:space-y-6">
+    <div class="grid grid-cols-3 gap-3 sm:gap-5">
+      <div class="rounded-xl border border-gray-200 bg-white p-4 sm:p-6">
+        <div class="text-sm font-semibold text-gray-800 tabular-nums sm:text-2xl">{{rupiah(kas)}}</div>
+        <div class="mt-1 text-[10px] font-medium uppercase tracking-wide text-gray-400 sm:text-xs">Saldo Kas</div>
+      </div>
+      <div class="rounded-xl border border-gray-200 bg-white p-4 sm:p-6">
+        <div class="text-sm font-semibold text-brand-500 tabular-nums sm:text-2xl">{{pending}}</div>
+        <div class="mt-1 text-[10px] font-medium uppercase tracking-wide text-gray-400 sm:text-xs">Perlu Verifikasi</div>
+      </div>
+      <div class="rounded-xl border border-gray-200 bg-white p-4 sm:p-6">
+        <div class="text-sm font-semibold text-error-500 tabular-nums sm:text-2xl">{{belum}}</div>
+        <div class="mt-1 text-[10px] font-medium uppercase tracking-wide text-gray-400 sm:text-xs">Belum Bayar</div>
+      </div>
+    </div>
+
+    <div class="cursor-pointer rounded-xl border border-gray-200 bg-white p-5 transition-all hover:border-brand-300 hover:shadow-theme-xs sm:p-6" role="button" @click="go('/admin/verifikasi')">
+      <div class="flex items-center justify-between gap-3">
+        <div>
+          <h3 class="font-semibold text-gray-800">Verifikasi Pembayaran</h3>
+          <p class="mt-0.5 text-sm text-gray-400">{{pending}} konfirmasi menunggu dari warga</p>
+        </div>
+        <span class="shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold" :class="pending?'bg-error-500 text-white':'bg-success-50 text-success-600'">
+          {{pending?pending+' baru':'aman'}}
+        </span>
+      </div>
+    </div>
+
+    <div class="rounded-xl border border-gray-200 bg-white p-5 sm:p-6">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h3 class="font-semibold text-gray-800">Tagihan Bulanan</h3>
+          <p class="mt-0.5 text-sm text-gray-400">{{blnLabel(bulan)}}: {{tagihanCount}} tagihan tergenerate</p>
+        </div>
+        <button class="rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-600 disabled:opacity-50" :disabled="busyGen" @click="genTagihan">
+          {{busyGen?'Memproses…':'Generate / Refresh'}}
+        </button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-3 sm:gap-5">
+      <div class="cursor-pointer rounded-xl border border-gray-200 bg-white p-5 transition-all hover:border-brand-300 hover:shadow-theme-xs" role="button" @click="go('/admin/iuran')">
+        <div class="mb-3 flex size-11 items-center justify-center rounded-xl bg-brand-50">
+          <svg class="size-5.5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.8 1.5 1M12 19.5 4.5 15V6L12 2l7.5 4v9L12 19.5Z"/></svg>
+        </div>
+        <h3 class="font-semibold text-gray-800">Jenis Iuran</h3>
+        <p class="mt-0.5 text-sm text-gray-400">Master daftar ›</p>
+      </div>
+      <div class="cursor-pointer rounded-xl border border-gray-200 bg-white p-5 transition-all hover:border-brand-300 hover:shadow-theme-xs" role="button" @click="go('/admin/master')">
+        <div class="mb-3 flex size-11 items-center justify-center rounded-xl bg-brand-50">
+          <svg class="size-5.5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75"/></svg>
+        </div>
+        <h3 class="font-semibold text-gray-800">Data Rumah</h3>
+        <p class="mt-0.5 text-sm text-gray-400">Pemilik & iuran ›</p>
+      </div>
+    </div>
+  </div>`,
+  data(){return{kas:0,pending:0,belum:0,tagihanCount:0,bulan:bulanIni(),busyGen:false}},
+  methods:{
+    rupiah,blnLabel,
+    go(p){this.$root.go(p)},
+    async loadAll(){
+      const[{data:rs},{data:tg},{data:pay},{data:allPay},{data:allKel}]=await Promise.all([
+        sb.from('rumah').select('*').order('no'),
+        sb.from('tagihan').select('rumah_id,status').eq('bulan',this.bulan),
+        sb.from('pembayaran').select('id').eq('status','PENDING'),
+        sb.from('pembayaran').select('nominal').eq('status','VERIFIED'),
+        sb.from('pengeluaran').select('nominal')
+      ]);
+      const tgMap={};(tg||[]).forEach(t=>tgMap[t.rumah_id]=t);
+      this.tagihanCount=(tg||[]).length;
+      this.belum=(rs||[]).filter(r=>r.aktif&&(!tgMap[r.id]||tgMap[r.id].status!=='LUNAS')).length;
+      this.pending=(pay||[]).length;
+      this.$root.nPending=this.pending;
+      this.kas=(allPay||[]).reduce((s,p)=>s+p.nominal,0)-(allKel||[]).reduce((s,k)=>s+k.nominal,0);
+    },
+    async genTagihan(){
+      this.busyGen=true;
+      const{data:rs}=await sb.from('rumah').select('*,iuran_item(*)').order('no');
+      for(const r of (rs||[])){
+        const total=(r.iuran_item||[]).filter(i=>i.aktif).reduce((s,i)=>s+i.nominal,0);
+        if(!r.aktif||!total)continue;
+        await sb.from('tagihan').upsert({rumah_id:r.id,bulan:this.bulan,total:total},{onConflict:'rumah_id,bulan'});
+      }
+      await this.loadAll();this.busyGen=false;
+      this.$root.toast('Tagihan '+blnLabel(this.bulan)+' siap');
+    }
+  },
+  async mounted(){await this.loadAll()}
+};
+
+/* ============ VERIFIKASI ============ */
+const AdminVerif={
+  template:`
+  <div class="space-y-4">
+    <div v-if="loading" class="rounded-xl border border-gray-200 bg-white p-6"><div class="animate-pulse space-y-3"><div class="h-4 w-2/3 rounded bg-gray-200"></div><div class="h-4 w-1/3 rounded bg-gray-200"></div></div></div>
+    <div v-else-if="!pending.length" class="rounded-xl border border-gray-200 bg-white py-14 text-center">
+      <svg class="mx-auto size-12 text-success-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+      <p class="mt-3 text-sm text-gray-500">Tidak ada antrian 👍</p>
+    </div>
+    <div v-for="p in pending" :key="p.id" class="rounded-xl border border-gray-200 bg-white p-4 sm:p-5">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <div class="font-semibold text-gray-800">Rumah No. {{p._no}} — {{p._pemilik}}</div>
+          <div class="mt-0.5 text-sm text-gray-400">{{rupiah(p.nominal)}} · transfer {{p.tgl_transfer}}</div>
+          <div v-if="p._saran" class="mt-0.5 text-sm font-medium text-success-600">{{p._saran}}</div>
+        </div>
+        <div class="flex gap-2">
+          <a v-if="p.bukti_url" :href="p.bukti_url" target="_blank" class="rounded-lg border border-gray-200 px-3.5 py-2 text-sm font-medium text-brand-500 hover:bg-brand-50">Bukti</a>
+          <button class="rounded-lg bg-success-500 px-3.5 py-2 text-sm font-semibold text-white hover:bg-success-600 disabled:opacity-50" :disabled="busyId===p.id" @click="verify(p,true)">✓ Verifikasi</button>
+          <button class="rounded-lg border border-error-200 px-3.5 py-2 text-sm font-medium text-error-600 hover:bg-error-50 disabled:opacity-50" :disabled="busyId===p.id" @click="verify(p,false)">✗ Tolak</button>
+        </div>
+      </div>
+    </div>
+  </div>`,
+  data(){return{pending:[],loading:true,busyId:null}},
+  async mounted(){await this.load()},
+  methods:{
+    rupiah,blnLabel,
+    async load(){
+      const{data:rs}=await sb.from('rumah').select('*,iuran_item(*)').order('no');
+      const{data:pay}=await sb.from('pembayaran').select('*').eq('status','PENDING').order('created_at',{ascending:false});
+      const rMap={};(rs||[]).forEach(r=>{
+        r._total=(r.iuran_item||[]).filter(i=>i.aktif).reduce((s,i)=>s+i.nominal,0);
+        rMap[r.id]=r;
+      });
+      this.pending=(pay||[]).map(p=>{
+        const r=rMap[p.rumah_id];
+        p._no=r?r.no:'?';p._pemilik=r?r.pemilik:'-';
+        p._saran=r&&r._total?('≈ '+Math.floor(p.nominal/r._total)+' bulan iuran'):'';
+        return p;
+      });
+      this.loading=false;
+      this.$root.nPending=this.pending.length;
+    },
+    async verify(p,ok){
+      this.busyId=p.id;
+      try{
+        if(ok){
+          const{data:items}=await sb.from('iuran_item').select('nominal').eq('rumah_id',p.rumah_id).eq('aktif',true);
+          const per=(items||[]).reduce((s,i)=>s+i.nominal,0);
+          const{data:tgs}=await sb.from('tagihan').select('*').eq('rumah_id',p.rumah_id).eq('status','BELUM').order('bulan');
+          let rem=p.nominal,dari=null,sampai=null;
+          for(const t of(tgs||[])){
+            if(rem>=t.total){rem-=t.total;
+              await sb.from('tagihan').update({status:'LUNAS'}).eq('id',t.id);
+              if(!dari)dari=t.bulan;sampai=t.bulan;
+            }else break;
+          }
+          let bln=sampai||dari||bulanIni();
+          while(rem>0&&per>0){
+            bln=nextMonth(bln);
+            if(rem<per)break;
+            await sb.from('tagihan').upsert({rumah_id:p.rumah_id,bulan:bln,total:per,status:'LUNAS'},{onConflict:'rumah_id,bulan'});
+            rem-=per;sampai=bln;
+          }
+          await sb.from('pembayaran').update({status:'VERIFIED',verified_by:(this.$root.user||{}).email||'admin',verified_at:new Date().toISOString(),bulan_dari:dari,bulan_sampai:sampai}).eq('id',p.id);
+          this.$root.toast('Terverifikasi ✓ '+(dari?blnLabel(dari)+(sampai&&sampai!==dari?' s/d '+blnLabel(sampai):''):'(tanpa alokasi)'));
+        }else{
+          await sb.from('pembayaran').update({status:'REJECTED',verified_by:(this.$root.user||{}).email||'admin'}).eq('id',p.id);
+          this.$root.toast('Pembayaran ditolak');
+        }
+        await this.load();
+      }catch(e){this.$root.toast('Gagal: '+(e.message||e))}
+      this.busyId=null;
+    }
+  }
+};
+
+/* ============ JENIS IURAN ============ */
+const AdminJenis={
+  template:`
+  <div class="space-y-4 sm:space-y-5">
+    <div class="rounded-xl border border-gray-200 bg-white p-5 sm:p-6">
+      <h3 class="mb-4 font-semibold text-gray-800">Tambah Jenis</h3>
+      <div class="grid grid-cols-1 gap-3 sm:grid-cols-12">
+        <div class="sm:col-span-5">
+          <label class="mb-1.5 block text-sm font-medium text-gray-700">Nama</label>
+          <input v-model="baru.label" placeholder="mis. Kebersihan" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20">
+        </div>
+        <div class="sm:col-span-4">
+          <label class="mb-1.5 block text-sm font-medium text-gray-700">Nominal (Rp)</label>
+          <input type="number" v-model.number="baru.nominal" placeholder="50000" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20">
+        </div>
+        <div class="flex items-end sm:col-span-3">
+          <button class="w-full rounded-lg bg-brand-500 py-2.5 text-sm font-semibold text-white hover:bg-brand-600 disabled:opacity-50" :disabled="!baru.label||!baru.nominal||busy" @click="add">{{busy?'Menyimpan…':'Tambah'}}</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="overflow-hidden rounded-xl border border-gray-200 bg-white">
+      <div class="border-b border-gray-100 px-5 py-4 sm:px-6"><h3 class="font-semibold text-gray-800">Daftar Jenis</h3></div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full">
+          <thead><tr class="border-b border-gray-100">
+            <th class="px-5 py-3 text-start text-xs font-medium text-gray-400">Nama</th>
+            <th class="px-5 py-3 text-end text-xs font-medium text-gray-400">Nominal</th>
+            <th class="px-5 py-3 text-start text-xs font-medium text-gray-400">Dipakai</th>
+            <th class="px-5 py-3 text-end text-xs font-medium text-gray-400"></th>
+          </tr></thead>
+          <tbody>
+            <tr v-for="j in jenis" class="border-b border-gray-50 last:border-0 hover:bg-gray-50/50">
+              <td class="px-5 py-3.5">
+                <template v-if="editId===j.id">
+                  <input v-model="edit.label" class="w-full rounded-lg border border-gray-300 px-3 py-1.5 text-sm outline-none focus:border-brand-500">
+                </template>
+                <b v-else class="text-sm text-gray-800">{{j.label}}</b>
+              </td>
+              <td class="px-5 py-3.5 text-end">
+                <template v-if="editId===j.id">
+                  <input type="number" v-model.number="edit.nominal" class="w-28 rounded-lg border border-gray-300 px-3 py-1.5 text-end text-sm outline-none focus:border-brand-500">
+                </template>
+                <span v-else class="text-sm font-semibold tabular-nums text-gray-800">{{rupiah(j.nominal)}}</span>
+              </td>
+              <td class="px-5 py-3.5"><span class="rounded-full bg-brand-50 px-2.5 py-1 text-xs font-medium text-brand-500">{{j._dipakai}} rumah</span></td>
+              <td class="px-5 py-3.5 text-end whitespace-nowrap">
+                <template v-if="editId===j.id">
+                  <button class="mr-2 rounded-lg bg-brand-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-600" @click="save(j)">Simpan</button>
+                  <button class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50" @click="editId=null">Batal</button>
+                </template>
+                <template v-else>
+                  <button class="mr-2 rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-brand-500 hover:bg-brand-50" @click="startEdit(j)">Edit</button>
+                  <button class="rounded-lg border border-error-200 px-3 py-1.5 text-xs font-medium text-error-600 hover:bg-error-50" @click="hapus(j)">Hapus</button>
+                </template>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="border-t border-gray-100 px-5 py-3 text-xs text-gray-400">Edit nominal di sini tidak mengubah yang sudah terpasang di rumah.</p>
+    </div>
+  </div>`,
+  data(){return{jenis:[],baru:{label:'',nominal:null},busy:false,editId:null,edit:{label:'',nominal:null}}},
+  async mounted(){await this.load()},
+  methods:{
+    rupiah,
+    async load(){
+      const[{data:js},{data:items}]=await Promise.all([
+        sb.from('iuran_jenis').select('*').eq('aktif',true).order('label'),
+        sb.from('iuran_item').select('label').eq('aktif',true)
+      ]);
+      const cnt={};(items||[]).forEach(i=>cnt[i.label]=(cnt[i.label]||0)+1);
+      this.jenis=(js||[]).map(j=>{j._dipakai=cnt[j.label]||0;return j});
+    },
+    async add(){
+      this.busy=true;
+      try{
+        await sb.from('iuran_jenis').insert({label:this.baru.label.trim(),nominal:this.baru.nominal});
+        this.baru={label:'',nominal:null};
+        await this.load();this.$root.toast('Jenis iuran ditambahkan');
+      }catch(e){this.$root.toast('Gagal: '+(e.message||e))}
+      this.busy=false;
+    },
+    startEdit(j){this.editId=j.id;this.edit={label:j.label,nominal:j.nominal}},
+    async save(j){
+      try{
+        await sb.from('iuran_jenis').update({label:this.edit.label.trim(),nominal:this.edit.nominal}).eq('id',j.id);
+        this.editId=null;await this.load();this.$root.toast('Jenis tersimpan');
+      }catch(e){this.$root.toast('Gagal: '+(e.message||e))}
+    },
+    async hapus(j){
+      if(j._dipakai>0&&!confirm('"'+j.label+'" dipakai '+j._dipakai+' rumah. Hapus jenis ini?'))return;
+      await sb.from('iuran_jenis').update({aktif:false}).eq('id',j.id);
+      await this.load();this.$root.toast('Jenis dihapus');
+    }
+  }
+};
+
+/* ============ MASTER RUMAH ============ */
+const AdminMaster={
+  template:`
+  <div class="space-y-4 sm:space-y-5">
+    <div class="rounded-xl border border-brand-100 bg-brand-25/60 p-5 sm:p-6">
+      <h3 class="mb-4 font-semibold text-gray-800">
+        <svg class="mr-1.5 inline size-5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z"/></svg>
+        Pasang Iuran ke Banyak Rumah
+      </h3>
+      <div class="grid grid-cols-1 gap-3 sm:grid-cols-12">
+        <div class="sm:col-span-5">
+          <label class="mb-1.5 block text-sm font-medium text-gray-700">Jenis Iuran</label>
+          <select v-model="bulk.jenisId" class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20">
+            <option value="">— pilih jenis —</option>
+            <option v-for="j in jenis" :value="j.id">{{j.label}} — {{rupiah(j.nominal)}}</option>
+          </select>
+        </div>
+        <div class="sm:col-span-4">
+          <label class="mb-1.5 block text-sm font-medium text-gray-700">No Rumah (kosong = semua dihuni)</label>
+          <input v-model="bulk.nos" placeholder="mis. 1,2,3,5" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20">
+        </div>
+        <div class="flex items-end sm:col-span-3">
+          <button class="w-full rounded-lg bg-brand-500 py-2.5 text-sm font-semibold text-white hover:bg-brand-600 disabled:opacity-50" :disabled="!bulk.jenisId||bulkBusy" @click="applyBulk">{{bulkBusy?'Memasang…':'Pasang'}}</button>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="loading" class="rounded-xl border border-gray-200 bg-white p-6"><div class="animate-pulse space-y-3"><div class="h-4 w-full rounded bg-gray-200"></div><div class="h-4 w-2/3 rounded bg-gray-200"></div></div></div>
+    <div v-else class="overflow-hidden rounded-xl border border-gray-200 bg-white">
+      <div class="overflow-x-auto">
+        <table class="min-w-full">
+          <thead><tr class="border-b border-gray-100">
+            <th class="px-5 py-3 text-start text-xs font-medium text-gray-400">No</th>
+            <th class="px-5 py-3 text-start text-xs font-medium text-gray-400">Pemilik</th>
+            <th class="px-5 py-3 text-start text-xs font-medium text-gray-400">Dihuni</th>
+            <th class="px-5 py-3 text-start text-xs font-medium text-gray-400">Iuran aktif</th>
+            <th class="px-5 py-3 text-end text-xs font-medium text-gray-400"></th>
+          </tr></thead>
+          <tbody>
+            <tr v-for="r in rumah" class="border-b border-gray-50 last:border-0 hover:bg-gray-50/50">
+              <td class="px-5 py-3 text-sm font-semibold text-gray-800">{{r.no}}</td>
+              <td class="px-5 py-3">
+                <input v-if="editId===r.id" v-model="edit.pemilik" class="w-full rounded-lg border border-gray-300 px-3 py-1.5 text-sm outline-none focus:border-brand-500">
+                <span v-else class="text-sm text-gray-700">{{r.pemilik}}</span>
+              </td>
+              <td class="px-5 py-3">
+                <label v-if="editId===r.id" class="relative inline-flex cursor-pointer items-center">
+                  <input type="checkbox" v-model="edit.dihuni" class="peer sr-only">
+                  <div class="h-6 w-11 rounded-full bg-gray-200 peer-checked:bg-success-500 after:absolute after:left-0.5 after:top-0.5 after:size-5 after:rounded-full after:bg-white after:transition-all peer-checked:after:translate-x-5"></div>
+                </label>
+                <span v-else class="text-sm" :class="r.dihuni?'text-gray-700':'text-gray-400'">{{r.dihuni?'Ya':'Kosong'}}</span>
+              </td>
+              <td class="px-5 py-3">
+                <template v-if="editId===r.id">
+                  <div class="mb-2 flex flex-wrap gap-1.5">
+                    <span v-for="(it,i) in edit.items" :key="i" class="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-1 text-xs font-medium text-brand-500">
+                      {{it.label}}
+                      <button class="text-brand-300 hover:text-error-500" @click="edit.items.splice(i,1)">✕</button>
+                    </span>
+                  </div>
+                  <select v-model="edit.addJenis" @change="addJenisToEdit" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm outline-none focus:border-brand-500">
+                    <option value="">+ tambah jenis…</option>
+                    <option v-for="j in jenisAvailable" :value="j.id">{{j.label}} — {{rupiah(j.nominal)}}</option>
+                  </select>
+                </template>
+                <template v-else>
+                  <div class="flex flex-wrap gap-1.5">
+                    <span v-for="it in r._items" class="rounded-full bg-brand-50 px-2.5 py-1 text-xs font-medium text-brand-500">{{it.label}}</span>
+                  </div>
+                  <span v-if="!r._total" class="text-xs text-gray-400">belum ada</span>
+                </template>
+              </td>
+              <td class="px-5 py-3 text-end whitespace-nowrap">
+                <button v-if="editId!==r.id" class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-brand-500 hover:bg-brand-50" @click="startEdit(r)">Edit</button>
+                <button v-if="editId!==r.id" class="ml-1 rounded-lg bg-success-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-success-600" @click="bukaKelola(r)">Kelola Iuran</button>
+                <template v-else>
+                  <button class="mr-2 rounded-lg bg-brand-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-600" @click="saveEdit(r)">Simpan</button>
+                  <button class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50" @click="editId=null">Batal</button>
+                </template>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- MODAL KELOLA IURAN PER BULAN -->
+    <div v-if="kelola" class="fixed inset-0 z-1000 flex items-end justify-center bg-gray-900/50 p-0 sm:items-center sm:p-4" @click.self="kelola=null">
+      <div class="flex max-h-[92vh] w-full max-w-2xl flex-col rounded-t-2xl bg-white shadow-2xl sm:rounded-2xl">
+        <div class="flex items-center justify-between border-b border-gray-100 px-5 py-4">
+          <div>
+            <h3 class="font-semibold text-gray-800">Kelola Iuran — Rumah No. {{kelola.r.no}}</h3>
+            <p class="text-xs text-gray-400">{{kelola.r.pemilik}}</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button class="rounded-lg border border-gray-200 px-2.5 py-1 text-xs font-medium text-gray-600 hover:bg-gray-50" @click="kelola.tahun--;muatKelola()">‹ {{kelola.tahun-1}}</button>
+            <span class="text-sm font-bold text-gray-800">{{kelola.tahun}}</span>
+            <button class="rounded-lg border border-gray-200 px-2.5 py-1 text-xs font-medium text-gray-600 hover:bg-gray-50" @click="kelola.tahun++;muatKelola()">{{kelola.tahun+1}} ›</button>
+            <button class="ml-1 text-gray-400 hover:text-gray-700" @click="kelola=null">
+              <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="overflow-y-auto px-5 py-4">
+          <p class="mb-3 text-xs text-gray-400">✓ Lunas = uang diterima admin langsung (otomatis masuk kas & mutasi). Ubah nominal untuk bulan yang beda (mis. rumah kosong) — wajib isi catatan.</p>
+          <table class="min-w-full">
+            <thead><tr class="border-b border-gray-100">
+              <th class="py-2 text-start text-xs font-medium text-gray-400">Bulan</th>
+              <th class="py-2 text-end text-xs font-medium text-gray-400">Tagihan</th>
+              <th class="py-2 text-center text-xs font-medium text-gray-400">Status</th>
+              <th class="py-2 text-start text-xs font-medium text-gray-400">Catatan</th>
+              <th class="py-2 text-end text-xs font-medium text-gray-400">Aksi</th>
+            </tr></thead>
+            <tbody>
+              <tr v-for="row in kelola.rows" :key="row.bulan" class="border-b border-gray-50">
+                <td class="py-2.5 text-sm font-medium text-gray-800">{{blnLabel(row.bulan)}}</td>
+                <td v-if="kelola.editBln!==row.bulan" class="py-2.5 text-end text-sm tabular-nums text-gray-700">
+                  {{rupiah(row.total)}}<span v-if="!row.ada" class="ml-1 text-[10px] text-gray-300">std</span>
+                </td>
+                <td v-else class="py-2.5 text-end">
+                  <input type="number" v-model.number="kelola.nominal" class="w-28 rounded-lg border border-gray-300 px-2 py-1.5 text-end text-sm tabular-nums">
+                </td>
+                <td class="py-2.5 text-center">
+                  <span class="rounded-full px-2.5 py-1 text-[11px] font-semibold" :class="row.status==='LUNAS'?'bg-success-50 text-success-600':'bg-error-50 text-error-500'">{{row.status}}</span>
+                </td>
+                <td class="py-2.5 text-xs text-gray-400">
+                  <template v-if="kelola.editBln!==row.bulan">{{row.catatan||'-'}}</template>
+                  <input v-else v-model="kelola.catatan" placeholder="wajib: kenapa diubah?" class="w-36 rounded-lg border border-gray-300 px-2 py-1.5 text-xs">
+                </td>
+                <td class="py-2.5 text-end whitespace-nowrap">
+                  <template v-if="kelola.editBln!==row.bulan">
+                    <button v-if="row.status!=='LUNAS'" :disabled="kelola.busy" class="rounded-lg bg-success-500 px-2.5 py-1.5 text-xs font-semibold text-white hover:bg-success-600 disabled:opacity-50" @click="tandaiLunas(row)">✓ Lunas</button>
+                    <button v-if="row.status!=='LUNAS'" class="ml-1 rounded-lg border border-gray-200 px-2.5 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50" @click="mulaiEditNominal(row)">Ubah</button>
+                  </template>
+                  <template v-else>
+                    <button class="rounded-lg bg-brand-500 px-2.5 py-1.5 text-xs font-semibold text-white hover:bg-brand-600" :disabled="kelola.busy" @click="simpanNominal(row)">Simpan</button>
+                    <button class="ml-1 rounded-lg border border-gray-200 px-2.5 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50" @click="kelola.editBln=null">Batal</button>
+                  </template>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>`,
+  data(){return{rumah:[],jenis:[],loading:true,editId:null,edit:{pemilik:'',dihuni:true,items:[],addJenis:''},bulk:{jenisId:'',nos:''},bulkBusy:false,kelola:null}},
+  computed:{
+    jenisAvailable(){
+      const used=this.edit.items.map(i=>i.label);
+      return this.jenis.filter(j=>!used.includes(j.label));
+    }
+  },
+  async mounted(){await this.load()},
+  methods:{
+    rupiah,
+    blnLabel,
+    async bukaKelola(r){
+      await catatanStore.init();
+      this.kelola={r,rilis:false,tahun:new Date().getFullYear(),rows:[],editBln:null,nominal:null,catatan:'',busy:false};
+      await this.muatKelola();
+    },
+    async muatKelola(){
+      const k=this.kelola;k.busy=true;
+      const{data:tgs}=await sb.from('tagihan').select('*').eq('rumah_id',k.r.id)
+        .gte('bulan',k.tahun+'-01').lte('bulan',k.tahun+'-12');
+      const map={};(tgs||[]).forEach(t=>map[t.bulan]=t);
+      k.rows=BLN.map((_,i)=>{
+        const bln=k.tahun+'-'+String(i+1).padStart(2,'0');
+        const t=map[bln];
+        return{bulan:bln,total:t?t.total:(k.r._total||0),status:t?t.status:'BELUM',ada:!!t,catatan:catatanStore.get(k.r.id+'_'+bln)};
+      });
+      k.busy=false;
+    },
+    async tandaiLunas(row){
+      const k=this.kelola;k.busy=true;
+      try{
+        await sb.from('tagihan').upsert({rumah_id:k.r.id,bulan:row.bulan,total:row.total,status:'LUNAS'},{onConflict:'rumah_id,bulan'});
+        const{error}=await sb.from('pembayaran').insert({
+          rumah_id:k.r.id,nominal:row.total,
+          tgl_transfer:new Date().toISOString().slice(0,10),
+          status:'VERIFIED',
+          verified_by:(this.$root.user||{}).email||'admin',
+          verified_at:new Date().toISOString(),
+          keterangan:'Diterima langsung oleh admin'
+        });
+        if(error)throw error;
+        this.$root.toast(blnLabel(row.bulan)+' LUNAS — uang masuk kas ✓');
+        await this.muatKelola();
+      }catch(e){this.$root.toast('Gagal: '+(e.message||e))}
+      k.busy=false;
+    },
+    mulaiEditNominal(row){
+      const k=this.kelola;
+      k.editBln=row.bulan;k.nominal=row.total;k.catatan=row.catatan;
+    },
+    async simpanNominal(row){
+      const k=this.kelola;
+      if(!k.catatan||!k.catatan.trim()){this.$root.toast('Catatan wajib — tulis kenapa nominal diubah');return}
+      if(!(k.nominal>=0)){this.$root.toast('Nominal tidak valid');return}
+      k.busy=true;
+      try{
+        await sb.from('tagihan').upsert({rumah_id:k.r.id,bulan:row.bulan,total:k.nominal,status:'BELUM'},{onConflict:'rumah_id,bulan'});
+        await catatanStore.set(k.r.id+'_'+row.bulan,k.catatan.trim());
+        this.$root.toast(blnLabel(row.bulan)+' → '+rupiah(k.nominal)+' tersimpan');
+        k.editBln=null;
+        await this.muatKelola();
+      }catch(e){this.$root.toast('Gagal: '+(e.message||e))}
+      k.busy=false;
+    },
+    async load(){
+      const[{data:rs},{data:js}]=await Promise.all([
+        sb.from('rumah').select('*,iuran_item(*)').order('no'),
+        sb.from('iuran_jenis').select('*').eq('aktif',true).order('label')
+      ]);
+      this.jenis=js||[];
+      this.rumah=sortNo(rs||[]).map(r=>{
+        r._items=(r.iuran_item||[]).filter(i=>i.aktif);
+        r._total=r._items.reduce((s,i)=>s+i.nominal,0);
+        return r;
+      });
+      this.loading=false;
+    },
+    addJenisToEdit(){
+      if(!this.edit.addJenis)return;
+      const j=this.jenis.find(x=>x.id===this.edit.addJenis);
+      if(j)this.edit.items.push({label:j.label,nominal:j.nominal});
+      this.edit.addJenis='';
+    },
+    startEdit(r){
+      this.editId=r.id;
+      this.edit={pemilik:r.pemilik,dihuni:r.dihuni,items:r._items.map(i=>({id:i.id,label:i.label,nominal:i.nominal})),addJenis:''};
+    },
+    async saveEdit(r){
+      await sb.from('rumah').update({pemilik:this.edit.pemilik,dihuni:this.edit.dihuni}).eq('id',r.id);
+      for(const i of this.edit.items.filter(x=>x.id)){
+        if(i.label&&i.nominal>0)await sb.from('iuran_item').update({label:i.label,nominal:i.nominal}).eq('id',i.id);
+        else await sb.from('iuran_item').update({aktif:false}).eq('id',i.id);
+      }
+      for(const i of this.edit.items.filter(x=>!x.id&&x.label&&x.nominal>0)){
+        await sb.from('iuran_item').insert({rumah_id:r.id,label:i.label,nominal:i.nominal});
+      }
+      this.editId=null;await this.load();
+      this.$root.toast('Rumah no.'+r.no+' tersimpan');
+    },
+    async applyBulk(){
+      this.bulkBusy=true;
+      try{
+        const j=this.jenis.find(x=>x.id===this.bulk.jenisId);
+        if(!j)throw new Error('pilih jenis');
+        let targets=this.rumah;
+        if(this.bulk.nos.trim()){
+          const nos=this.bulk.nos.split(',').map(x=>parseInt(x.trim())).filter(x=>x>0);
+          targets=this.rumah.filter(r=>nos.includes(r.no));
+        }else{
+          targets=this.rumah.filter(r=>r.dihuni);
+        }
+        let n=0;
+        for(const r of targets){
+          const sudah=(r._items||[]).some(i=>i.label===j.label);
+          if(sudah)continue;
+          await sb.from('iuran_item').insert({rumah_id:r.id,label:j.label,nominal:j.nominal});
+          n++;
+        }
+        await this.load();
+        this.$root.toast('Iuran "'+j.label+'" dipasang ke '+n+' rumah');
+        this.bulk.nos='';
+      }catch(e){this.$root.toast('Gagal: '+(e.message||e))}
+      this.bulkBusy=false;
+    }
+  }
+};
+
+/* ============ PENGELUARAN & PEMASUKAN ============ */
+const AdminKeluar={
+  template:`
+  <div class="space-y-4 sm:space-y-5">
+    <div class="rounded-xl border border-gray-200 bg-white p-5 sm:p-6">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <h3 class="font-semibold text-gray-800">Catat Transaksi</h3>
+        <div class="flex rounded-xl border border-gray-200 p-1">
+          <button class="rounded-lg px-4 py-1.5 text-xs font-semibold transition-colors" :class="tx.jenis==='keluar'?'bg-error-500 text-white':'text-gray-500 hover:text-gray-700'" @click="tx.jenis='keluar'">− Pengeluaran</button>
+          <button class="rounded-lg px-4 py-1.5 text-xs font-semibold transition-colors" :class="tx.jenis==='masuk'?'bg-success-500 text-white':'text-gray-500 hover:text-gray-700'" @click="tx.jenis='masuk'">+ Pemasukan</button>
+        </div>
+      </div>
+      <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-12">
+        <div class="sm:col-span-2">
+          <label class="mb-1.5 block text-sm font-medium text-gray-700">Tanggal</label>
+          <input type="date" v-model="tx.tanggal" class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm outline-none focus:border-brand-500">
+        </div>
+        <div v-if="tx.jenis==='keluar'" class="sm:col-span-3">
+          <label class="mb-1.5 block text-sm font-medium text-gray-700">Pilih Jenis (cepat)</label>
+          <select v-model="tx.jenisId" @change="pakaiJenis" class="w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-brand-500">
+            <option value="">— input manual —</option>
+            <option v-for="j in jenis" :value="j.id">{{j.label}}<template v-if="j.nama_penerima"> · {{j.nama_penerima}}</template> — {{rupiah(j.nominal)}}</option>
+          </select>
+          <p class="mt-1 text-xs text-gray-400">Pilih jenis = kategori, penerima & nominal terisi otomatis</p>
+        </div>
+        <div class="sm:col-span-2">
+          <label class="mb-1.5 block text-sm font-medium text-gray-700">Kategori</label>
+          <input v-model="tx.kategori" :placeholder="tx.jenis==='masuk'?'mis. Sumbangan':'mis. Satpam'" class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm outline-none focus:border-brand-500">
+        </div>
+        <div class="sm:col-span-2">
+          <label class="mb-1.5 block text-sm font-medium text-gray-700">{{tx.jenis==='masuk'?'Dari':'Penerima'}}</label>
+          <input v-model="tx.pihak" :placeholder="tx.jenis==='masuk'?'mis. Donatur':'mis. Pak Anang'" class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm outline-none focus:border-brand-500">
+        </div>
+        <div class="col-span-2 sm:col-span-2">
+          <label class="mb-1.5 block text-sm font-medium text-gray-700">Keterangan</label>
+          <input v-model="tx.keterangan" placeholder="opsional" class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm outline-none focus:border-brand-500">
+        </div>
+        <div class="sm:col-span-1">
+          <label class="mb-1.5 block text-sm font-medium text-gray-700">Nominal</label>
+          <input type="number" v-model.number="tx.nominal" placeholder="500000" class="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-brand-500">
+        </div>
+        <div class="col-span-2 flex items-end sm:col-span-1">
+          <button class="w-full rounded-lg py-2.5 text-sm font-semibold text-white disabled:opacity-50" :class="tx.jenis==='masuk'?'bg-success-500 hover:bg-success-600':'bg-error-500 hover:bg-error-600'" :disabled="!tx.nominal||busy" @click="add">{{busy?'Menyimpan…':'Simpan'}}</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="overflow-hidden rounded-xl border border-gray-200 bg-white">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-gray-100 px-5 py-4 sm:px-6">
+        <h3 class="font-semibold text-gray-800">Riwayat</h3>
+        <div class="flex rounded-lg border border-gray-200 p-0.5">
+          <button v-for="f in [['all','Semua'],['masuk','Pemasukan'],['keluar','Pengeluaran']]" :key="f[0]"
+            class="rounded-md px-3 py-1 text-xs font-medium transition-colors"
+            :class="rF===f[0]?'bg-brand-500 text-white':'text-gray-500 hover:text-gray-700'" @click="rF=f[0]">{{f[1]}}</button>
+        </div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full">
+          <thead><tr class="border-b border-gray-100">
+            <th class="px-4 py-3 text-start text-xs font-medium text-gray-400">Tgl</th>
+            <th class="px-4 py-3 text-start text-xs font-medium text-gray-400">Kategori</th>
+            <th class="px-4 py-3 text-start text-xs font-medium text-gray-400">{{tx.jenis==='masuk'?'Dari':'Penerima'}}</th>
+            <th class="px-4 py-3 text-start text-xs font-medium text-gray-400">Ket</th>
+            <th class="px-4 py-3 text-end text-xs font-medium text-gray-400">Nominal</th>
+            <th class="px-4 py-3"></th>
+          </tr></thead>
+          <tbody>
+            <tr v-if="!riwayat.length"><td colspan="6" class="px-5 py-6 text-center text-sm text-gray-400">Belum ada transaksi.</td></tr>
+            <tr v-for="r in riwayat" :key="r.jenis+r.id" class="border-b border-gray-50 last:border-0 hover:bg-gray-50/50">
+              <td class="whitespace-nowrap px-4 py-3.5 text-sm text-gray-600">{{r.tgl}}</td>
+              <td class="px-4 py-3.5"><span class="rounded-full px-2.5 py-1 text-xs font-medium" :class="r.jenis==='masuk'?'bg-success-50 text-success-600':'bg-brand-50 text-brand-500'">{{r.kat}}</span></td>
+              <td class="px-4 py-3.5 text-sm text-gray-700">{{r.pihak||'-'}}</td>
+              <td class="px-4 py-3.5 text-sm text-gray-500">{{r.ket||'-'}}</td>
+              <td class="px-4 py-3.5 text-end text-sm font-semibold tabular-nums" :class="r.jenis==='masuk'?'text-success-600':'text-error-500'">
+                {{r.jenis==='masuk'?'+':'−'}}{{rupiah(r.nominal)}}
+              </td>
+              <td class="px-3 py-3.5 text-end">
+                <button class="rounded-lg border border-error-200 px-2.5 py-1 text-xs font-medium text-error-600 hover:bg-error-50" title="Hapus transaksi" @click="hapusTx(r)">✕</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>`,
+  data(){return{
+    tx:{jenis:'keluar',tanggal:new Date().toISOString().slice(0,10),jenisId:'',kategori:'',pihak:'',keterangan:'',nominal:null},
+    jenis:[],list:[],masukList:[],rF:'all',busy:false
+  }},
+  computed:{
+    riwayat(){
+      const a=(this.list||[]).map(k=>({id:k.id,tgl:k.tanggal,jenis:'keluar',kat:k.kategori,pihak:k.penerima||'',ket:k.keterangan,nominal:k.nominal}));
+      const b=(this.masukList||[]).map(m=>({id:m.id,tgl:m.tanggal,jenis:'masuk',kat:m.kategori,pihak:m.dari||'',ket:m.keterangan,nominal:m.nominal}));
+      let all=[...a,...b].sort((x,y)=>(y.tgl+'').localeCompare(x.tgl+''));
+      if(this.rF!=='all')all=all.filter(x=>x.jenis===this.rF);
+      return all;
+    }
+  },
+  async mounted(){await this.load()},
+  methods:{
+    rupiah,
+    async load(){
+      const[{data:kel},{data:js},masuk]=await Promise.all([
+        sb.from('pengeluaran').select('*').order('tanggal',{ascending:false}).limit(100),
+        sb.from('pengeluaran_jenis').select('*').eq('aktif',true).order('label'),
+        pemasukanStore.list()
+      ]);
+      this.list=kel||[];this.jenis=js||[];this.masukList=masuk||[];
+    },
+    pakaiJenis(){
+      if(!this.tx.jenisId)return;
+      const j=this.jenis.find(x=>x.id===this.tx.jenisId);
+      if(j){this.tx.kategori=j.label;this.tx.pihak=j.nama_penerima||'';this.tx.nominal=j.nominal||null}
+    },
+    async add(){
+      if(!this.tx.nominal){this.$root.toast('Isi nominal dulu');return}
+      this.busy=true;
+      try{
+        if(this.tx.jenis==='masuk'){
+          await pemasukanStore.add({tanggal:this.tx.tanggal,kategori:this.tx.kategori||'Pemasukan',dari:this.tx.pihak,keterangan:this.tx.keterangan,nominal:this.tx.nominal});
+          this.masukList=await pemasukanStore.list();
+        }else{
+          let payload={tanggal:this.tx.tanggal,kategori:this.tx.kategori||'Lain-lain',penerima:this.tx.pihak,keterangan:this.tx.keterangan,nominal:this.tx.nominal};
+          let{error}=await sb.from('pengeluaran').insert(payload);
+          if(error&&/penerima/i.test(error.message||'')){
+            const ket=this.tx.pihak?this.tx.pihak+(this.tx.keterangan?' — '+this.tx.keterangan:''):this.tx.keterangan;
+            const r2=await sb.from('pengeluaran').insert({tanggal:this.tx.tanggal,kategori:this.tx.kategori||'Lain-lain',keterangan:ket,nominal:this.tx.nominal});
+            if(r2.error)throw r2.error;
+          }else if(error)throw error;
+          await this.load();
+        }
+        this.tx.kategori='';this.tx.pihak='';this.tx.keterangan='';this.tx.nominal=null;this.tx.jenisId='';
+        this.$root.toast('Transaksi tercatat');
+      }catch(e){this.$root.toast('Gagal: '+(e.message||e))}
+      this.busy=false;
+    },
+    async hapusTx(r){
+      if(!confirm('Hapus transaksi '+(r.jenis==='masuk'?'pemasukan':'pengeluaran')+' '+rupiah(r.nominal)+' ('+r.tgl+')?\nSaldo kas akan menyesuaikan.'))return;
+      try{
+        if(r.jenis==='masuk'){
+          await pemasukanStore.remove(r.id);
+          this.masukList=await pemasukanStore.list();
+        }else{
+          const{error}=await sb.from('pengeluaran').delete().eq('id',r.id);
+          if(error)throw error;
+          await this.load();
+        }
+        this.$root.toast('Transaksi dihapus');
+      }catch(e){this.$root.toast('Gagal hapus: '+(e.message||e))}
+    }
+  }
+};
+
+/* ============ MASTER JENIS PENGELUARAN ============ */
+const AdminPengJenis={
+  template:`
+  <div class="space-y-4 sm:space-y-5">
+    <div class="rounded-xl border border-gray-200 bg-white p-5 sm:p-6">
+      <h3 class="mb-1 font-semibold text-gray-800">Tambah Jenis Pengeluaran</h3>
+      <p class="mb-4 text-sm text-gray-400">Contoh: Gaji Satpam dengan penerima Pak Anang & nominal tetap — sekali input, dipakai terus.</p>
+      <div class="grid grid-cols-1 gap-2.5 sm:grid-cols-12">
+        <div class="sm:col-span-3">
+          <input v-model="jb.label" placeholder="Nama jenis (mis. Gaji Satpam)" class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm outline-none focus:border-brand-500">
+        </div>
+        <div class="sm:col-span-3">
+          <input v-model="jb.nama" placeholder="Penerima (mis. Pak Anang)" class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm outline-none focus:border-brand-500">
+        </div>
+        <div class="sm:col-span-3">
+          <input type="number" v-model.number="jb.nominal" placeholder="Nominal" class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm outline-none focus:border-brand-500">
+        </div>
+        <div class="sm:col-span-3">
+          <button class="w-full rounded-lg bg-brand-500 py-2.5 text-sm font-semibold text-white hover:bg-brand-600 disabled:opacity-50" :disabled="!jb.label||busy" @click="add">{{busy?'Menyimpan…':'+ Tambah'}}</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="overflow-hidden rounded-xl border border-gray-200 bg-white">
+      <div class="border-b border-gray-100 px-5 py-4 sm:px-6"><h3 class="font-semibold text-gray-800">Daftar Jenis</h3></div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full">
+          <thead><tr class="border-b border-gray-100">
+            <th class="px-5 py-3 text-start text-xs font-medium text-gray-400">Jenis</th>
+            <th class="px-5 py-3 text-start text-xs font-medium text-gray-400">Penerima</th>
+            <th class="px-5 py-3 text-end text-xs font-medium text-gray-400">Nominal</th>
+            <th class="px-5 py-3"></th>
+          </tr></thead>
+          <tbody>
+            <tr v-if="!jenis.length"><td colspan="4" class="px-5 py-6 text-center text-sm text-gray-400">Belum ada jenis.</td></tr>
+            <tr v-for="j in jenis" :key="j.id" class="border-b border-gray-50 last:border-0 hover:bg-gray-50/50">
+              <td class="px-5 py-3.5 text-sm font-medium text-gray-800">
+                {{j.label}}
+                <input v-if="editId===j.id" v-model="ef.label" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm">
+              </td>
+              <td class="px-5 py-3.5 text-sm text-gray-600">
+                <template v-if="editId!==j.id">{{j.nama_penerima||'-'}}</template>
+                <input v-else v-model="ef.nama" placeholder="penerima" class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm">
+              </td>
+              <td class="px-5 py-3.5 text-end text-sm font-semibold tabular-nums text-gray-800">
+                <template v-if="editId!==j.id">{{rupiah(j.nominal)}}</template>
+                <input v-else type="number" v-model.number="ef.nominal" class="w-full rounded-lg border border-gray-300 px-3 py-2 text-end text-sm">
+              </td>
+              <td class="whitespace-nowrap px-5 py-3.5 text-end">
+                <template v-if="editId!==j.id">
+                  <button class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50" @click="startEdit(j)">Edit</button>
+                  <button class="ml-1 rounded-lg border border-error-200 px-3 py-1.5 text-xs font-medium text-error-600 hover:bg-error-50" @click="hapus(j)">Hapus</button>
+                </template>
+                <template v-else>
+                  <button class="rounded-lg bg-brand-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-600" @click="save(j)">Simpan</button>
+                  <button class="ml-1 rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50" @click="editId=null">Batal</button>
+                </template>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>`,
+  data(){return{jenis:[],jb:{label:'',nama:'',nominal:null},editId:null,ef:{label:'',nama:'',nominal:null},busy:false}},
+  async mounted(){await this.load()},
+  methods:{
+    rupiah,
+    async load(){
+      const{data:js}=await sb.from('pengeluaran_jenis').select('*').eq('aktif',true).order('label');
+      this.jenis=js||[];
+    },
+    startEdit(j){this.editId=j.id;this.ef={label:j.label,nama:j.nama_penerima||'',nominal:j.nominal}},
+    async save(j){
+      await sb.from('pengeluaran_jenis').update({label:this.ef.label.trim(),nama_penerima:this.ef.nama.trim(),nominal:this.ef.nominal||0}).eq('id',j.id);
+      this.editId=null;await this.load();this.$root.toast('Jenis diperbarui');
+    },
+    async hapus(j){
+      if(!confirm('Hapus jenis "'+j.label+'"?'))return;
+      await sb.from('pengeluaran_jenis').update({aktif:false}).eq('id',j.id);
+      await this.load();this.$root.toast('Jenis dihapus');
+    },
+    async add(){
+      this.busy=true;
+      try{
+        await sb.from('pengeluaran_jenis').insert({label:this.jb.label.trim(),nama_penerima:this.jb.nama.trim(),nominal:this.jb.nominal||0});
+        this.jb={label:'',nama:'',nominal:null};
+        await this.load();this.$root.toast('Jenis pengeluaran ditambahkan');
+      }catch(e){this.$root.toast('Gagal: '+(e.message||e))}
+      this.busy=false;
+    }
+  }
+};
+
+/* ============ ROOT ============ */
+const TITLES={'/':'Beranda','/bayar':'Bayar Iuran','/rekap':'Rekap Iuran','/mutasi':'Mutasi Kas','/admin':'Dashboard','/admin/verifikasi':'Verifikasi','/admin/iuran':'Jenis Iuran','/admin/master':'Data Rumah','/admin/pengeluaran':'Pemasukan & Pengeluaran','/admin/pengjenis':'Jenis Pengeluaran'};
+const app=Vue.createApp({
+  data(){return{toastMsg:'',view:Home,path:'/',params:{},user:null,nPending:0,menuOpen:false,sideCollapsed:false,vw:0}},
+  computed:{
+    isWide(){return this.vw>=1280},
+    sidebarOpen(){
+      // desktop: selalu terbuka kecuali collapsed; mobile: ikut menuOpen
+      return this.isWide ? !this.sideCollapsed : this.menuOpen;
+    },
+    contentClass(){
+      return this.isWide && !this.sideCollapsed ? 'xl:ml-72' : 'ml-0';
+    },
+    pageTitle(){
+      if(this.path.startsWith('/rumah/'))return 'Rumah No.'+this.params.no;
+      return TITLES[this.path]||'Iuran Komplek';
+    }
+  },
+  async created(){
+    window.addEventListener('hashchange',()=>this.route());
+    this._onResize=()=>{this.vw=window.innerWidth};
+    this._onResize();
+    window.addEventListener('resize',this._onResize);
+    this.route();
+    const{data:{session}}=await sb.auth.getSession();
+    this.user=session?session.user:null;
+    sb.auth.onAuthStateChange((_e,s)=>{
+      this.user=s?s.user:null;
+      if(!this.user&&this.path.startsWith('/admin'))this.go('/admin');
+      this.route();
+    });
+    sb.from('pembayaran').select('id').eq('status','PENDING').then(({data})=>{this.nPending=(data||[]).length});
+  },
+  methods:{
+    toggleMenu(){
+      if(this.isWide)this.sideCollapsed=!this.sideCollapsed;
+      else this.menuOpen=!this.menuOpen;
+    },
+    route(){
+      const h=location.hash.slice(1)||'/';
+      this.path=h;
+      this.params={};
+      const m=h.match(/^\/rumah\/(\d+)$/);
+      const adminPages={'/admin':AdminDash,'/admin/verifikasi':AdminVerif,'/admin/master':AdminMaster,'/admin/iuran':AdminJenis,'/admin/pengeluaran':AdminKeluar,'/admin/pengjenis':AdminPengJenis};
+      if(m){this.params={no:m[1]};this.view=RumahPage}
+      const mb=h.match(/^\/bayar\/(\d+[A-Za-z]?)$/);
+      if(mb){this.params={no:mb[1]};this.view=RumahPage}
+      else if(h==='/rekap')this.view=Rekap;
+      else if(h==='/bayar')this.view=BayarPage;
+      else if(h==='/mutasi')this.view=Mutasi;
+      else if(adminPages[h])this.view=this.user?adminPages[h]:AdminLogin;
+      else this.view=Home;
+      this.menuOpen=false;
+    },
+    go(p){location.hash=p},
+    async logout(){await sb.auth.signOut();this.go('/');this.toast('Sampai jumpa 👋')},
+    toast(m){this.toastMsg=m;clearTimeout(this._t);this._t=setTimeout(()=>this.toastMsg='',3500)}
+  }
+});
+app.mount('#app');
+</script>
+</body>
+</html>
